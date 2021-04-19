@@ -3,9 +3,11 @@ package model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-import com.mysql.cj.xdevapi.Statement;
+
 
 public class ManageProductModel {
 	
@@ -21,135 +23,119 @@ private Connection connect(){
 		}
 			return conn;
 	}
+
+
+
+
 //Add product using a form
-public String addProduct(String productId,String title,String sDesc,String lDesc,String price,String downloadLink) throws SQLException {
+public String addProductInterface() throws SQLException {
 
 String output = "";
-Connection conn = connect();
 
-String addProductsql = "INSERT INTO products (productId,title, sDesc, lDesc,price,downloadLink) VALUES (?,?,?,?,?,?)";
-PreparedStatement pre = conn.prepareStatement(addProductsql);
+//randId
 
-try {
-	
-	
-	
-	pre.setString(1, productId);
-	pre.setString(2, title);
-	pre.setString(3, sDesc);
-	pre.setString(4, lDesc);
-	pre.setString(5, price);
-	pre.setString(6,downloadLink);
-	
 
 	
-	pre.executeUpdate();
-	
-	output +="<form action='products/cart' method='post'>"
-			+ "<input type='hidden' name='productId' value="+productId+">"
-			+ "<input type='hidden' name='title' value="+title+">"
-			+ "<input type='hidden' name='sDesc' value="+sDesc+">"
-			+ "<input type='hidden' name='lDesc' value="+lDesc+">"
-			+ "<input type='hidden' name='price' value="+price+">"
-			+ "<input type='hidden' name='downloadLink' value="+downloadLink+">"
+	output +="<form action='../product_view/AddProduct' method='post'>"
+			+ "<input type='text' name='productId' value=''>"
+			+ "<input type='text' name='title' value=''>"
+			+ "<input type='text' name='sDesc' value=''>"
+			+ "<input type='text' name='lDesc' value=''>"
+			+ "<input type='text' name='price' value=''>"
+			+ "<input type='file' name='downloadLink' value=''>"
 			+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Products'></form>";
 	
 	
-	output +="</div>";
 	
 	
-	
-	
-	
-} catch (SQLException e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-}
+
 
 return output;
 
 }
 
 
+//insert products to  db
+
+
+
 
 
 //fetch Products Details to a Table
-/*public String fetchAllProducts(String search){
+
+public String loadProducts() {
 	
-	String sql = "";
 	String output = "";
-	Connection conn = connect();
 	
-	
-	
-	if (conn == null){
-		return "Error while connecting to the database for inserting."; 
-	}else {
+	try {
 		
-		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
-	
-		output += "<div class=\"container\"><div class='row' >";
+		Connection con = connect();
+		
+		if (con == null)
+		 {return "Error while connecting to the database for reading."; } 
+		
+		// Prepare the html table to be displayed
+		 output = "<table border='1'><tr><th>Product ID</th>"+
+		 "<th>Item Name</th>" +
+		 "<th>Item Price</th>" +
+		 "<th>Item Description</th>" +
+		 "<th>Item Description</th>" +
+		 "<th>Item Description</th>" +
+		 "<th>Update</th><th>Remove</th></tr>";
+		 
+		 
+		 String query = "select * from products";
+		 Statement stmt = con.createStatement();
+		 ResultSet rs = stmt.executeQuery(query); 
+		 
+		 
+		// iterate through the rows in the result set
+		 while (rs.next()) {
+			 
+			 String productId = rs.getString("productId");
+	        	String title = rs.getString("title");
+	        	String sDesc = rs.getString("sDesc");
+	        	String lDesc = rs.getString("lDesc");
+	        	String price = rs.getString("price");
+	        	String downloadLink = rs.getString("downloadLink");
+			 
+			 // Add into the html table
+			 output += "<tr><td>" + productId + "</td>";
+			 output += "<td>" + title + "</td>";
+			 output += "<td>" + sDesc + "</td>";
+			 output += "<td>" + lDesc + "</td>";
+			 output += "<td>" + price + "</td>";
+			 output += "<td>" + downloadLink + "</td>";
+			 
+			 
+			// buttons
+			 output += "<td><input name='btnUpdate' type='button' value='Update'class='btn btn-secondary'></td>"
+			 		+ "<td><form method='post' action='load'><input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
+			 + "<input name='productId' type='hidden' value='" + productId
+			 + "'>" + "</form></td></tr>"; 
+			 
+		 }
+		 
+		 
+		 
+		 con.close();
+		 // Complete the html table
+		 output += "</table>"; 
 		
 		
+	} catch (Exception e) {
+		// TODO: handle exception
 		
-		try {
-			
-			if(search.equals("all")) {
-				 sql = "SELECT * FROM products";
-			}else if(!search.equals("all")) {
-				 sql = "SELECT * FROM products WHERE productId LIKE '%"+search+"%' ";
-			}
-			
-			Statement stmt;
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
-			
-			
-			while (rs.next())
-			{
-				String productId = rs.getString("productId");
-	        	String productTitle = rs.getString("title");
-	        	String shortDescription = rs.getString("sDesc");
-	        	String longDescription = rs.getString("lDesc");
-	        	String productPrice = rs.getString("price");
-	        	String productLink = rs.getString("downloadLink");
-	        	
-	        	
-	        	output +="<div class='col-md-4' style='padding-top: 15px;padding-bottom: 15px;'>";
-	        	
-	        	output += "<p>Product ID :"+productId+"<br>Description : "+shortDescription+"<br>Price : "+productPrice+".00 LKR<br>Total Sales : "+totalSales+"</p>";
-	        	
-	        	
-	        	//buttons
-	        	output +="<form action='products/cart' method='post'>"
-	        			+ "<input type='hidden' name='productId' value="+productId+">"
-	        			+ "<input type='hidden' name='productName' value="+productName+">"
-	        			+ "<input type='hidden' name='shortDescription' value="+shortDescription+">"
-	        			+ "<input type='hidden' name='quantity' value="+quantity+">"
-	        			+ "<input type='hidden' name='price' value="+productPrice+">"
-	        			+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add to Cart'></form>";
-	        	
-	        	
-	        	output +="</div>";
-	        	
-	        	
-			}
-			
-			conn.close();
-			
-		} catch (SQLException e) {
-			output = "Error while fetching products";
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
-		
-		output += "</div></div>";
-			
-		
+		output = "Error while reading the items.";
+		 System.err.println(e.getMessage());
 	}
 	
 	return output;
-}*/
+	
+	
+}
+ 
+	
 
 
 

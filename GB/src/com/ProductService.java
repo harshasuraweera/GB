@@ -19,25 +19,34 @@ import org.jsoup.nodes.Document;
 public class ProductService {
 	
 	ManageProductModel product = new ManageProductModel();
-	
+	@GET
+	  @Path("/")
+	  @Produces(MediaType.TEXT_HTML)
+	  public String readItems() throws SQLException{
+	    
+	    return product.addProductInterface();
+	    
+	  }
 	
 	@POST
 	@Path("/AddProduct")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
-	public String addProduct(@FormParam("productId") String productId,
-		 @FormParam("title") String title,
-		 @FormParam("sDesc") String sDesc,
-		 @FormParam("lDesc") String lDesc,
-		 @FormParam("price") String price,
-		@FormParam("downloadLink") String downloadLink)
-	throws SQLException{
+	public String addProduct() throws SQLException{
 		
-		String output = product.addProduct(productId,title,sDesc,lDesc,price,downloadLink);
-		return output;
+		//String output = product.addProduct(productId,title,sDesc,lDesc,price,downloadLink);
+		return "done";
 	}
 	
-	
+	@POST
+	@Path("/load")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_HTML)
+	public String loadProducts() throws SQLException{
+		
+		String output = product.loadProducts();
+		
+		return output;
+	}
 	
 	
 

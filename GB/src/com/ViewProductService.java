@@ -81,5 +81,26 @@ public class ViewProductService {
 		return output;
 	}
 	
+	@GET
+	@Path("/paymentSuccess")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_HTML)
+	public String paymentSuccess() throws SQLException{
+		
+		String output = "Payment Success";
+		return output;
+	}
+	
+	@GET
+	@Path("/paymentUnsuccess")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_HTML)
+	public String paymentUnsuccess() throws SQLException{
+		
+		String output = "Payment Unsuccess";
+		return output;
+	}
+	
+	
 
 }

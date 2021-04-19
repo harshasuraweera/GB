@@ -151,7 +151,7 @@ public class BuyProductsModel {
 	//load cart item
 	public String loadCartItems(String loggedUsername) {
 		
-		String output = "<script>setTimeout('location.reload(true);', 1000);</script>";
+		String output = "<script>setTimeout('location.reload(true);', 2000);</script>";
 		Connection conn = connect();
 		
 		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
@@ -178,8 +178,21 @@ public class BuyProductsModel {
 				+ "</a><a href='../products'><button type='submit' class='btn btn-success' disabled >Total : "+total+".00 LKR </button></a>"
 				
 				//payhere redirect
-				+ "<form method='post' action='../products/cart'>"
-				+ "<button type='submit' class='btn btn-danger' >Make Payment</button></form>";
+				+ "<form method='post' action='https://sandbox.payhere.lk/pay/checkout'>"
+				+ "<input type='hidden' name='merchant_id' value='1217060'>"
+				+ "<input type='hidden' name='return_url' value='http://localhost:7070/GB/productService/products/paymentSuccess'>"
+				+ "<input type='hidden' name='cancel_url' value='http://localhost:7070/GB/productService/paymentUnsuccess'>"
+				+ "<input type='hidden' name='notify_url' value=''> <input type='hidden' name='order_id' value=''>"
+				+ "<input type='hidden' name='items' value=''> <input type='hidden' name='currency' value='LKR'>"
+				+ "<input type='hidden' name='amount' value='"+total+"'> <input type='hidden' name='country' value='Sri Lanka'>"
+				+ "<input class='form-control' type='hidden' name='first_name' value='Amila' >"
+				+ "<input class='form-control' type='hidden' name='last_name'  value='Bandara' >"
+				+ "<input class='form-control' type='hidden' name='email' value='testpayment@gmail.com'  >"
+				+ "<input class='form-control' type='hidden' name='phone' value='0777123456'  >"
+				+ "<input class='form-control' type='hidden' name='city' value='Colombo' >"
+				+ "<textarea class='form-control' name='address'  hidden>No56, Colombo 07</textarea>"
+				+ "<button type='submit' class='btn btn-danger' >Make Payment</button>"
+				+ "</form>";
 		
 		
 		output += "</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";

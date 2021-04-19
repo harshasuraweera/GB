@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 public class BuyProductsModel {
 	
@@ -70,7 +71,7 @@ public class BuyProductsModel {
 		        	
 		        	
 		        	//buttons
-		        	output +="<form action='products/addToCart' method='post'>"
+		        	output +="<form action='../productService/products/addToCart' method='post'>"
 		        			+ "<input type='hidden' name='productId' value="+productId+">"
 		        			+ "<input type='hidden' name='productName' value="+productName+">"
 		        			+ "<input type='hidden' name='shortDescription' value="+shortDescription+">"
@@ -127,8 +128,8 @@ public class BuyProductsModel {
 			
 			output += "<h1 class=\"text-center\">Successfully Added to Cart</h1><br>"
 					+ "<div class=\"btn-group\" role=\"group\">"
-					+ "<a href='../products'><button type='submit' class='btn btn-primary' >Continue Shopping</button></a>"
-					+ "<form method='post' action='../products/cart'>"
+					+ "<a href='../../../GB/productService/products'><button type='submit' class='btn btn-primary' >Continue Shopping</button></a>"
+					+ "<form method='post' action='../../../GB/paymentService/products/cart'>"
 					+ "<button type='submit' class='btn btn-danger' >Processed to Checkout</button></form>";
 			
 			output +="</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";
@@ -170,21 +171,38 @@ public class BuyProductsModel {
 			e1.printStackTrace();
 		}
 		
+		//generate orderId
+		
+		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 10) { 
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = "GB-" + salt.toString();
+        //end generate randomID
+		
 		//buttons
 		output +="<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
 		output += "<h1 class=\"text-center\">Shopping Cart</h1><br>"
 				+ "<div class=\"btn-group\" role=\"group\">"
 				+ "<a href='../products'><button type='submit' class='btn btn-primary' >Continue Shopping</button>"
 				+ "</a><a href='../products'><button type='submit' class='btn btn-success' disabled >Total : "+total+".00 LKR </button></a>"
+		
+		
 				
-				//payhere redirect
+				//payment gateway redirect
 				+ "<form method='post' action='https://sandbox.payhere.lk/pay/checkout'>"
 				+ "<input type='hidden' name='merchant_id' value='1217060'>"
-				+ "<input type='hidden' name='return_url' value='http://localhost:7070/GB/productService/products/paymentSuccess'>"
-				+ "<input type='hidden' name='cancel_url' value='http://localhost:7070/GB/productService/paymentUnsuccess'>"
-				+ "<input type='hidden' name='notify_url' value=''> <input type='hidden' name='order_id' value=''>"
-				+ "<input type='hidden' name='items' value=''> <input type='hidden' name='currency' value='LKR'>"
-				+ "<input type='hidden' name='amount' value='"+total+"'> <input type='hidden' name='country' value='Sri Lanka'>"
+				+ "<input type='hidden' name='return_url' value='http://localhost:7070/GB/paymentService/products/paymentSuccess'>"
+				+ "<input type='hidden' name='cancel_url' value='http://localhost:7070/GB/paymentService/paymentUnsuccess'>"
+				+ "<input type='hidden' name='notify_url' value=''>"
+				+ "<input type='hidden' name='order_id' value='"+saltStr+"'>"
+				+ "<input type='hidden' name='items' value='Buy products from GadgetBadget'>"
+				+ "<input type='hidden' name='currency' value='LKR'>"
+				+ "<input type='hidden' name='amount' value='"+total+"'>"
+				+ "<input type='hidden' name='country' value='Sri Lanka'>"
 				+ "<input class='form-control' type='hidden' name='first_name' value='Amila' >"
 				+ "<input class='form-control' type='hidden' name='last_name'  value='Bandara' >"
 				+ "<input class='form-control' type='hidden' name='email' value='testpayment@gmail.com'  >"
@@ -221,7 +239,7 @@ public class BuyProductsModel {
 	        	output += "<tbody><tr><td>"+productNameInCart+"</td><td>"+productPriceInCart+".00 LKR</td><td>"+quantityInCart+"</td>"
 	        			
 	        			//remove from cart
-	        			+ "<td><form action='removeFromCart' method='post'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Remove</button></form></td></tr></tbody>";
+	        			+ "<td><form action='../../../GB/paymentService/products/removeFromCart' method='post'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Remove</button></form></td></tr></tbody>";
 	        	
 	        	
 	        }
@@ -262,6 +280,22 @@ public class BuyProductsModel {
 	
 	
 	
+	//paymentSuccess success page
+	public String paymentSuccessPage(String loggedUsername , String orderId) {
+		
+		String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
+		
+		
+		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
+		
+		output += "<h1>Payment was successful</h1><p><strong>Yay! It's done. Your&nbsp;<em>ORDER_ID</em>&nbsp;is "+orderId+"</strong><br></p>"
+				+ "<p>Visit &nbsp;<a href='../../../GB/paymentService/products/myDownloads'>My Downloads</a>&nbsp;page to access above products any time!<br></p>";
+		
+		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+		
+		return output;
+		
+	}
 	
 
 }

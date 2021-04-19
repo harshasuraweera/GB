@@ -85,9 +85,9 @@ public class ViewProductService {
 	@Path("/paymentSuccess")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
-	public String paymentSuccess() throws SQLException{
+	public String paymentSuccess(@QueryParam("order_id") String order_id) throws SQLException{
 		
-		String output = "Payment Success";
+		String output = buyProductsModel.paymentSuccessPage("U001", order_id);
 		return output;
 	}
 	
@@ -97,8 +97,7 @@ public class ViewProductService {
 	@Produces(MediaType.TEXT_HTML)
 	public String paymentUnsuccess() throws SQLException{
 		
-		String output = "Payment Unsuccess";
-		return output;
+		return "";
 	}
 	
 	

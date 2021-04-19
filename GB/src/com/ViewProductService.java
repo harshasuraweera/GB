@@ -16,20 +16,20 @@ import org.jsoup.nodes.Document;
 @Path("/products")
 public class ViewProductService {
 	
-	BuyProductsModel byeBuyProductsModel =  new BuyProductsModel();
+	BuyProductsModel buyProductsModel =  new BuyProductsModel();
 	
-	@POST
+	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
 	public String readItems(){
 		
-		return byeBuyProductsModel.fetchAllProducts("all");
+		return buyProductsModel.fetchAllProducts("all");
 		
 	}
 	
 	
 	@POST
-	@Path("/cart")
+	@Path("/addToCart")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
 	public String addToCart(@FormParam("productId") String productId,
@@ -38,7 +38,21 @@ public class ViewProductService {
 		 @FormParam("quantity") String quantity,
 		 @FormParam("price") String price) throws SQLException{
 		
-		String output = byeBuyProductsModel.addToCart("U001", productId, productName, shortDescription, quantity, price);
+		String output = buyProductsModel.addToCart("U001", productId, productName, shortDescription, quantity, price);
+		
+		
+		
+		return output;
+	}
+	
+	@POST
+	@Path("/cart")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_HTML)
+	public String loadCart() throws SQLException{
+		
+		String output = buyProductsModel.loadCartItems("U001");
+		
 		return output;
 	}
 	
@@ -53,7 +67,7 @@ public class ViewProductService {
 		 @FormParam("quantity") String quantity,
 		 @FormParam("price") String price) throws SQLException{
 		
-		String output = byeBuyProductsModel.addToCart("U001", productId, productName, shortDescription, quantity, price);
+		String output = buyProductsModel.addToCart("U001", productId, productName, shortDescription, quantity, price);
 		return output;
 	}
 	
@@ -63,7 +77,7 @@ public class ViewProductService {
 	@Produces(MediaType.TEXT_HTML)
 	public String removeFromCart(@FormParam("cartId") String cartId) throws SQLException{
 		
-		String output = byeBuyProductsModel.deleteFromCart(cartId);
+		String output = buyProductsModel.deleteFromCart(cartId);
 		return output;
 	}
 	

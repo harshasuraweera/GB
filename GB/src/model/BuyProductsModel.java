@@ -70,7 +70,7 @@ public class BuyProductsModel {
 		        	
 		        	
 		        	//buttons
-		        	output +="<form action='products/cart' method='post'>"
+		        	output +="<form action='products/addToCart' method='post'>"
 		        			+ "<input type='hidden' name='productId' value="+productId+">"
 		        			+ "<input type='hidden' name='productName' value="+productName+">"
 		        			+ "<input type='hidden' name='shortDescription' value="+shortDescription+">"
@@ -101,7 +101,7 @@ public class BuyProductsModel {
 	}
 	
 	
-	//Product add to cart and display cart details
+	//Product add to cart 
 	public String addToCart(String loggedUsername , String productId, String productName, String shortDescription, String quantity, String price) {
 		
 		String output = "";
@@ -125,35 +125,14 @@ public class BuyProductsModel {
 			
 			pstmt.executeUpdate();
 			
-			output += "<h1 class=\"text-center\">Shopping Cart</h1><br>"
+			output += "<h1 class=\"text-center\">Successfully Added to Cart</h1><br>"
 					+ "<div class=\"btn-group\" role=\"group\">"
-					+ "<form method='post' action='../products'><button type='submit' class='btn btn-primary' >Continue Shopping</button></form>"
-					+ "<form method='post' action='https://www.payhere.lk/account/user'>"
-					+ "<button type='submit' class='btn btn-danger' >Processed to Payment</button></form>";
+					+ "<a href='../products'><button type='submit' class='btn btn-primary' >Continue Shopping</button></a>"
+					+ "<form method='post' action='../products/cart'>"
+					+ "<button type='submit' class='btn btn-danger' >Processed to Checkout</button></form>";
 			
 			output +="</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";
 			
-			//cart item in a table
-			output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\"><div class=\"table-responsive\"><table class=\"table\">";
-			output +="<thead><th><strong>PRODUCT</strong><br></th><th><strong>PRICE</strong><br></th><th><strong>QUANTITY</strong><br></th><th><strong>REMOVE</strong><br></th><tr></thead>";
-			
-			
-			String loadCartItemsSql = "SELECT * FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"'";
-			
-			PreparedStatement stmt = conn.prepareStatement(loadCartItemsSql);
-	        ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-	        	
-	        	String productNameInCart = rs.getString("productName");
-	        	String quantityInCart = rs.getString("quantity");
-	        	String productPriceInCart = rs.getString("productPrice");
-	        	String cartId = rs.getString("cartId");
-	        	
-	        	
-	        	output += "<tbody><tr><td>"+productNameInCart+"</td><td>"+productPriceInCart+"</td><td>"+quantityInCart+"</td>"
-	        			+ "<td><form action='removeFromCart' method='post'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Remove</button></form></td></tr></tbody>";
-	        	
-	        }
 			
 			conn.close();
 			
@@ -165,9 +144,84 @@ public class BuyProductsModel {
 			
 		}
 		
-		
-		
 		return output;
+	}
+	
+	
+	//load cart item
+	public String loadCartItems(String loggedUsername) {
+		
+		String output = "<script>setTimeout('location.reload(true);', 1000);</script>";
+		Connection conn = connect();
+		
+		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
+		
+		
+		//get total cost of the cart items
+		int total = 0;
+		try {
+			String sql = "SELECT SUM(productPrice) FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"'  ";
+			Statement st;
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			rs.next(); // SELECT count(*) always returns exactly 1 row
+			total = rs.getInt(1); // Get value of first column
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		//buttons
+		output +="<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
+		output += "<h1 class=\"text-center\">Shopping Cart</h1><br>"
+				+ "<div class=\"btn-group\" role=\"group\">"
+				+ "<a href='../products'><button type='submit' class='btn btn-primary' >Continue Shopping</button>"
+				+ "</a><a href='../products'><button type='submit' class='btn btn-success' disabled >Total : "+total+".00 LKR </button></a>"
+				
+				//payhere redirect
+				+ "<form method='post' action='../products/cart'>"
+				+ "<button type='submit' class='btn btn-danger' >Make Payment</button></form>";
+		
+		
+		output += "</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";
+		//end buttons
+		
+		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\"><div class=\"table-responsive\"><table class=\"table\">";
+		output +="<thead><th><strong>PRODUCT</strong><br></th><th><strong>PRICE</strong><br></th><th><strong>QUANTITY</strong><br></th><th><strong>REMOVE</strong><br></th><tr></thead>";
+		
+		
+		String loadCartItemsSql = "SELECT * FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"'";
+		
+		
+		try {
+			PreparedStatement stmt2;
+			stmt2 = conn.prepareStatement(loadCartItemsSql);
+			ResultSet rs2 = stmt2.executeQuery();
+			
+			while (rs2.next()) {
+	        	
+	        	String productNameInCart = rs2.getString("productName");
+	        	String quantityInCart = rs2.getString("quantity");
+	        	String productPriceInCart = rs2.getString("productPrice");
+	        	String cartId = rs2.getString("cartId");
+	        	
+	        	
+	        	output += "<tbody><tr><td>"+productNameInCart+"</td><td>"+productPriceInCart+".00 LKR</td><td>"+quantityInCart+"</td>"
+	        			
+	        			//remove from cart
+	        			+ "<td><form action='removeFromCart' method='post'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Remove</button></form></td></tr></tbody>";
+	        	
+	        	
+	        }
+			
+			conn.close();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return output;
+        
+		
 	}
 	
 	
@@ -183,7 +237,7 @@ public class BuyProductsModel {
 
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(deleteFromCartSql);
-			output += "successfully deleted";
+			output += "<script>window.history.back();</script>";
 
 		} catch (SQLException e) {
 			output += "Error while removing";

@@ -33,19 +33,24 @@ public class ProjectService {
 	@Path("/AddProject")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
-	public String submitProjects() throws SQLException{
+	public String submitProjects(
+			@FormParam("randomProj_ID") String randomProj_ID,
+			@FormParam("Project_Title") String Project_Title,
+			@FormParam("Project_ShortDes") String Project_ShortDes,
+			@FormParam("Project_LongDes") String Project_LongDes,
+			@FormParam("Project_Srclink") String Project_Srclink,
+			@FormParam("Project_Videolink") String Project_Videolink) throws SQLException{
 	
 		
 		
 		//String output = product.addProduct(productId,title,sDesc,lDesc,price,downloadLink);
-		return "done";
-		//String output = project.submitProjectsInterface(randomProj_ID,Project_Title,Project_ShortDes ,Project_LongDes ,Project_Srclink ,Project_Videolink );
-		//return output;
+		
+		String output = project.AddProjects(randomProj_ID,Project_Title,Project_ShortDes ,Project_LongDes ,Project_Srclink ,Project_Videolink );
+		return output;
 	}
 	
-	@POST
+	@GET
 	@Path("/readProjects")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
 	public String readProjects() throws SQLException{
 		

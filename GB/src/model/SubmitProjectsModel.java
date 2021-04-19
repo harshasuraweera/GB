@@ -10,12 +10,14 @@ import java.sql.Statement;
 
 public class SubmitProjectsModel {
 	
+	
+
 	//A common method to connect to the DB
 	private Connection connect(){
 		
 		Connection conn = null;
 		try{
-			Class.forName("com.mysql.jdbc.Driver"); 
+			Class.forName("com.mysql.cj.jdbc.Driver"); 
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/projectservice", "root", "hashini");
 		}catch (Exception e){
 			e.printStackTrace();
@@ -29,18 +31,54 @@ public class SubmitProjectsModel {
 		
 		
 			output +="<form action='../projects/AddProject' method='post'>"
-					+ "<input type='text' name='projectId' value=''>"
-					+ "<input type='text' name='Projecttitle' value=''>"
-					+ "<input type='text' name='ShortDesc' value=''>"
-					+ "<input type='text' name='LongDesc' value=''>"
-					+ "<input type='text' name='srcLink' value=''>"
-					+ "<input type='text' name='videoLink' value=''>"
+					+ "<input type='text' name='randomProj_ID' value=''>"
+					+ "<input type='text' name='Project_Title' value=''>"
+					+ "<input type='text' name='Project_ShortDes' value=''>"
+					+ "<input type='text' name='Project_LongDes' value=''>"
+					+ "<input type='text' name='Project_Srclink' value=''>"
+					+ "<input type='text' name='Project_Videolink' value=''>"
 					+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Projects'></form>";
 			
 	
 		
 	    return output;
 			
+		
+	}
+	
+	
+	public String AddProjects(String randomProj_ID,String Project_Title, String Project_ShortDes , String Project_LongDes , String Project_Srclink , String Project_Videolink )
+	{
+		
+		String output = "";
+  	  
+	    Connection con = connect();
+
+		
+		 PreparedStatement pstmt;
+	     try {
+	    	 String sql = "insert into projects (randomProj_ID, Project_Title, Project_ShortDes, Project_LongDes, Project_Srclink, Project_Videolink) values (?,?,?,?,?,?)";
+	    	   	pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	    	   
+	    	   
+	    	 	pstmt.setString(1, randomProj_ID);
+	    	 	pstmt.setString(2, Project_Title);
+	    	 	pstmt.setString(3, Project_ShortDes);
+	    	 	pstmt.setString(4, Project_LongDes);
+	    	 	pstmt.setString(5, Project_Srclink);
+	    	 	pstmt.setString(6, Project_Videolink);
+	    	    
+	    	    
+	    	 	pstmt.executeUpdate();
+	    	    
+	    	    
+	     }catch (Exception e){
+	    	 output += "error";
+	    	     e.printStackTrace();
+	     }
+	
+	
+		return output;
 		
 	}
 	
@@ -56,7 +94,7 @@ public class SubmitProjectsModel {
 			 {return "Error while connecting to the database for reading."; }
 			
 			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>Item Code</th><th>randomProj_ID</th>" +
+			output = "<table border='1'><tr><th>randomProj_ID</th>" +
 					"<th>Project Title</th>" +
 					"<th>Short Discription</th>" +
 					"<th>Long Discription</th>" +
@@ -64,19 +102,19 @@ public class SubmitProjectsModel {
 					"<th>Video Link</th>" +
 					"<th>Update</th><th>Remove</th></tr>";
 			
-			String query = "select * from projects";
+			String queryz = "select * from projects";
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = stmt.executeQuery(queryz);
 			
 			// iterate through the rows in the result set
 			while (rs.next()) {
 				
-				String randomProj_ID = Integer.toString(rs.getInt("randomProj_ID"));
-				String Project_Title = Integer.toString(rs.getInt("Project_Title"));
-				String Project_ShortDes = Integer.toString(rs.getInt("Project_ShortDes"));
-				String Project_LongDes = Integer.toString(rs.getInt("Project_LongDes"));
-				String Project_Srclink = Integer.toString(rs.getInt("Project_Srclink"));
-				String Project_Videolink = Integer.toString(rs.getInt("Project_Videolink"));
+				String randomProj_ID = rs.getString("randomProj_ID");
+				String Project_Title = rs.getString("Project_Title");
+				String Project_ShortDes = rs.getString("Project_ShortDes");
+				String Project_LongDes = rs.getString("Project_LongDes");
+				String Project_Srclink = rs.getString("Project_Srclink");
+				String Project_Videolink = rs.getString("Project_Videolink");
 				
 			// Add into the html table	
 				output += "<tr><td>" + randomProj_ID + "</td>";
@@ -93,7 +131,7 @@ public class SubmitProjectsModel {
 					 + "'>" + "</form></td></tr>"; 
 			}
 
-			con.close();
+		
 			
 			output += "</table>";
 			

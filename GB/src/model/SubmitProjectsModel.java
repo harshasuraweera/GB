@@ -46,7 +46,7 @@ public class SubmitProjectsModel {
 		
 	}
 	
-	
+	//Add New Projects To the system :
 	public String AddProjects(String randomProj_ID,String Project_Title, String Project_ShortDes , String Project_LongDes , String Project_Srclink , String Project_Videolink )
 	{
 		
@@ -82,6 +82,8 @@ public class SubmitProjectsModel {
 		
 	}
 	
+	
+	//Display All Submitted Projects :
 	public String readProjects() {
 		
 		String output = "";
@@ -94,7 +96,7 @@ public class SubmitProjectsModel {
 			 {return "Error while connecting to the database for reading."; }
 			
 			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>randomProj_ID</th>" +
+			output = "<table border='1'><tr><th>Project ID</th>" +
 					"<th>Project Title</th>" +
 					"<th>Short Discription</th>" +
 					"<th>Long Discription</th>" +
@@ -126,7 +128,7 @@ public class SubmitProjectsModel {
 				
 			// buttons
 				 output += "<td><input name='btnUpdate' type='button' value='Update'class='btn btn-secondary'></td>"
-					 		+ "<td><form method='post' action='load'><input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
+					 		+ "<td><form method='post' action='../projects/removeProject'><input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
 					 + "<input name='productId' type='hidden' value='" + randomProj_ID
 					 + "'>" + "</form></td></tr>"; 
 			}
@@ -145,6 +147,42 @@ public class SubmitProjectsModel {
 		return output;
 	}
 	
+	//delete project from system
+	public String deleteProjects(String randomProj_ID) {
+		
+		String output = "";
 
+		try {
+			
+			Connection con = connect();
+			
+			// create a prepared statement
+			String query = "delete from projects where randomProj_ID=?"; 
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			// binding values
+			preparedStmt.setString(1,randomProj_ID);		
+				
+			// execute the statement
+			preparedStmt.execute();
+			con.close(); 
+			
+			output = "Deleted successfully";
+			
+			
+		}catch (Exception e) {
+			
+			output = "Error while deleting the item.";
+			 System.err.println(e.getMessage());
+			
+		}
+		
+	
+		return output;
+	
+	
+	}
+	
 
 }

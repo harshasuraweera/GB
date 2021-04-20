@@ -28,7 +28,7 @@ public class ProjectService {
 	    
 	  }
 	
-	
+	//Add New Projects :
 	@POST
 	@Path("/AddProject")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -49,6 +49,8 @@ public class ProjectService {
 		return output;
 	}
 	
+	
+	//Display All Project Details :
 	@GET
 	@Path("/readProjects")
 	@Produces(MediaType.TEXT_HTML)
@@ -59,9 +61,19 @@ public class ProjectService {
 		return output;
 	}
 	
+	//Delete Projects Details :
+	@POST
+	@Path("/removeProject")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_HTML)
+	public String removeProject(@FormParam("randomProj_ID") String randomProj_ID) throws SQLException{
+		
+		String output = project.deleteProjects(randomProj_ID);
+		return output;
 	
-	
-	
-	
+	}
 
+	
+	
+	
 }

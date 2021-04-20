@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 
 
@@ -25,7 +26,19 @@ private Connection connect(){
 	}
 
 
+public static String generateProductId() {
+    String SALTCHARS = "ABCDE1234567890";
+    StringBuilder salt = new StringBuilder();
+    Random rnd = new Random();
+    while (salt.length() < 6) { // length of the random string.
+        int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+        salt.append(SALTCHARS.charAt(index));
+    }
+    String saltStr = salt.toString();
+    
+    return  "PD-" + saltStr;
 
+}
 
 //Add product using a form
 public String addProductInterface() throws SQLException {
@@ -35,15 +48,21 @@ String output = "";
 //randId
 
 
+
+String productId = generateProductId() ;
+
+
 	
-	output +="<form action='../product_view/AddProduct' method='post'>"
-			+ "<input type='text' name='productId' >"
-			+ "<input type='text' name='title' >"
-			+ "<input type='text' name='sDesc' >"
-			+ "<input type='text' name='lDesc' >"
-			+ "<input type='text' name='price' >"
-			+ "<input type='file' name='downloadLink' >"
-			+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Products'></form>";
+	output +="<center><form action='../../../GB/productService/product_view/AddProduct' method='post'>"
+			+ "<h2>STOCK YOUR SHOP</h2><br>"
+			+ "<input type='text' name='productId' value="+productId+" readonly><br><br>"
+			+ "<input type='text' name='title' required><br><br>"
+			+ "<textarea class=\"form-control\" name=\"sDesc\" style=\"height: 170px;\" style=\"width: 50px;\" maxlength=\"200\" placeholder=\"Should be less than 200 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
+			+ "<textarea class=\"form-control\" name=\"lDesc\" style=\"height: 500px;\" maxlength=\"500\" placeholder=\"Should be less than 500 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
+			+ "<input type='text' name='price' required ><br><br>"
+			+ "<input type='file' name='downloadLink' required><br><br>"
+			+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Products'>"
+			+ "</form></center>";
 	
 	
 	
@@ -58,7 +77,7 @@ return output;
 //insert products to  db
 public String addProduct(String productId,String title,String sDesc,String lDesc,String price,String downloadLink) {
 	
-	String output = "";
+	String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
 	Connection conn = connect();
 	
 	PreparedStatement pre;
@@ -77,12 +96,17 @@ public String addProduct(String productId,String title,String sDesc,String lDesc
 		pre.setString(5, price);
 		pre.setString(6,downloadLink);
 		
-
 		
 		pre.executeUpdate();
 		
 		
-	
+		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
+		
+		output += "<h1>your Product Submitted Successfully </h1>"
+				+ "<p>If the issue persists, &nbsp;<a href='../../../GB/productService/product_view/load'>View Added Details</a>&nbsp;in a few minutes.<br></p>";
+		
+		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+
 		
 		
 		//conn.close();
@@ -91,7 +115,13 @@ public String addProduct(String productId,String title,String sDesc,String lDesc
 		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
-		output = "Error ";
+		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
+		
+		output += "<h1>Payment was unsuccessful</h1><p><strong>Oops! Something went wrong! </strong><br></p>"
+				+ "<p>If the issue persists, &nbsp;<a href='../../../GB/productService/product_view'>Try Again!</a>&nbsp;in a few minutes.<br></p>";
+		
+		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+		
 		System.err.println(e.getMessage());
 		e.printStackTrace();
 	}
@@ -198,4 +228,60 @@ public String loadProducts() {
 		
 		return output;
 	}
+	
+	
+//Update Details
+	public String updateProduct(String productId,String title,String sDesc,String lDesc,String price,String downloadLink) {
+		
+		String output = ""; 
+		try
+		 {
+			Connection con = connect();
+			if (con == null)
+			{	
+				return "Error while connecting to the database for updating.";
+				
+			}
+		 // create a prepared statement
+			String query = "update products set productId=?, title=?,sDesc=?,lDesc=?,price=?,downloadLink=? where  productId=";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+		 // binding values
+		 preparedStmt.setString(1, productId);
+		 preparedStmt.setString(2, title);
+		 preparedStmt.setString(3, sDesc);
+		 preparedStmt.setString(4, lDesc);
+		 preparedStmt.setString(5, price);
+		 preparedStmt.setString(6, downloadLink);
+		 
+		 // execute the statement
+		 preparedStmt.execute();
+		 con.close();
+		 output = "Updated successfully";
+		 
+		 
+		 }
+		
+		 catch (Exception e)
+		
+		 {
+			 
+		 output = "Error while updating the item.";
+		 System.err.println(e.getMessage());
+		 }
+		
+		
+		
+		
+		
+		
+		
+		return output;
+		
+		
+		
+		
+	}
+	
+	
 }

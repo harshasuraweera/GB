@@ -63,5 +63,40 @@ public class ProductService {
 		String output = product.deleteProduct(productId);
 		return output;
 	}
-
+	
+//	@PUT
+//	@Path("/updateDetails")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	
+//	 
+//	@Produces(MediaType.TEXT_PLAIN)
+//	public String updateProduct(String itemData)
+//	{
+//		
+//		{
+//			 "productId":"<itemID >",
+//			 "title":"<itemCode >",
+//			 "sDesc":"<itemName >",
+//			 "lDesc":"<itemPrice >",
+//			 "price":"<itemDesc >",
+//			 "price":"<itemDesc >"
+//			}
+//		
+//	//Convert the input string to a JSON object
+//	 JsonObject itemObject = new JsonParser().parse(itemData).getAsJsonObject();
+//	 
+//	//Read the values from the JSON object
+//	 String productId = itemObject.get("productId").getAsString();
+//	 String title = itemObject.get("title").getAsString();
+//	 String sDesc = itemObject.get("sDesc").getAsString();
+//	 String lDesc = itemObject.get("lDesc").getAsString();
+//	 String price = itemObject.get("price").getAsString();
+//	 String downloadLink = itemObject.get("downloadLink").getAsString();
+//	 String output = itemObject.updateProduct(productId, title, sDesc, lDesc, price,downloadLink);
+//	 
+//	 
+//	return output;
+//	}
+	
+	
 }

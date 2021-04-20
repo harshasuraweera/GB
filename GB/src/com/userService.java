@@ -1,6 +1,8 @@
 package com;
 
 import model.user;
+
+import java.sql.SQLException;
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -10,20 +12,20 @@ import com.google.gson.*;
 import org.jsoup.*;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
-@Path("/Users")
+@Path("/user")
 
 public class userService {
 	
 	user userObj = new user();
 	@GET
-	@Path("/")
+	@Path("/read")
 	@Produces(MediaType.TEXT_HTML)
 	public String readusers() {
 		return userObj.readuser();
 	}
 	
 	@POST
-	@Path("/") 
+	@Path("/insert") 
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
 	@Produces(MediaType.TEXT_PLAIN) 
 	public String insertuser(@FormParam("userName") String userName,
@@ -36,7 +38,7 @@ public class userService {
 	}
 	
 	@PUT
-	@Path("/") 
+	@Path("/update") 
 	@Consumes(MediaType.APPLICATION_JSON) 
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateuser(String userData) {
@@ -52,10 +54,11 @@ public class userService {
 		String userPW = userObject.get("userPW").getAsString();
 		String output = userObj.updateuser(userID, userName, userEmail, userMobile, userPW);
 		return output;
+		
 	}
 	
 	@DELETE
-	@Path("/")
+	@Path("/delete")
 	@Consumes(MediaType.APPLICATION_XML) 
 	@Produces(MediaType.TEXT_PLAIN) 
 	public String deleteuser(String userData) {

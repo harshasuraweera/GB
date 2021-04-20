@@ -1,5 +1,10 @@
 package model;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 public class user {
 	
 	//A common method to connect to the DB
@@ -8,7 +13,7 @@ public class user {
 		Connection con = null;
 		try {
 			
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			//Provide the correct details: DBServer/DBName, username, password 
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/userservice","root","1234");
 			
@@ -28,7 +33,9 @@ public class user {
 			Connection con = connect();
 			
 			if (con == null) {
+				
 				return "Error while connecting to the database for inserting."; 
+			
 			}
 			
 			// create a prepared statement

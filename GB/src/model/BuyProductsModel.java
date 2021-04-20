@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class BuyProductsModel {
 	
-	//A common method to connect to the DB
+	//This method will be connect the payment service databse to the project
 	private Connection connect(){
 		
 		Connection conn = null;
@@ -24,7 +24,8 @@ public class BuyProductsModel {
 	}
 	
 	
-	//Fetch products from the products table
+	/* By this method, all the products will be retrieving HTML grid view 
+	 * */
 	public String fetchAllProducts(String search){
 		
 		String sql = "";
@@ -102,7 +103,8 @@ public class BuyProductsModel {
 	}
 	
 	
-	//Product add to cart 
+	/* If the use clicked the "Add To Cart button" the adding to cart table process is fulfilled in here 
+	 * */
 	public String addToCart(String loggedUsername , String productId, String productName, String shortDescription, String quantity, String price) {
 		
 		String output = "";
@@ -149,7 +151,8 @@ public class BuyProductsModel {
 	}
 	
 	
-	//load cart item
+	/* When user viewing the cart page, the products under his UserName will be fetching through this 
+	 * */
 	public String loadCartItems(String loggedUsername) {
 		
 		String output = "<script>setTimeout('location.reload(true);', 2000);</script>";
@@ -165,14 +168,13 @@ public class BuyProductsModel {
 			Statement st;
 			st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			rs.next(); // SELECT count(*) always returns exactly 1 row
-			total = rs.getInt(1); // Get value of first column
+			rs.next(); 
+			total = rs.getInt(1);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 		
-		//generate orderId
-		
+		//start generate random orderId
 		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
@@ -181,18 +183,19 @@ public class BuyProductsModel {
             salt.append(SALTCHARS.charAt(index));
         }
         String saltStr = "GB-" + salt.toString();
-        //end generate randomID
+        //end generate random orderId
 		
-		//buttons
+        
+		//buttons to "continue shopping" and "processed to payment"
 		output +="<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
 		output += "<h1 class=\"text-center\">Shopping Cart</h1><br>"
 				+ "<div class=\"btn-group\" role=\"group\">"
 				+ "<a href='../products'><button type='submit' class='btn btn-primary' >Continue Shopping</button>"
 				+ "</a><a href='../products'><button type='submit' class='btn btn-success' disabled >Total : "+total+".00 LKR </button></a>"
-		
+		//end buttons
 		
 				
-				//payment gateway redirect
+				//start payment gateway SDK form 
 				+ "<form method='post' action='https://sandbox.payhere.lk/pay/checkout'>"
 				+ "<input type='hidden' name='merchant_id' value='1217060'>"
 				+ "<input type='hidden' name='return_url' value='http://localhost:7070/GB/paymentService/products/paymentSuccess'>"
@@ -203,18 +206,18 @@ public class BuyProductsModel {
 				+ "<input type='hidden' name='currency' value='LKR'>"
 				+ "<input type='hidden' name='amount' value='"+total+"'>"
 				+ "<input type='hidden' name='country' value='Sri Lanka'>"
-				+ "<input class='form-control' type='hidden' name='first_name' value='Amila' >"
-				+ "<input class='form-control' type='hidden' name='last_name'  value='Bandara' >"
-				+ "<input class='form-control' type='hidden' name='email' value='testpayment@gmail.com'  >"
-				+ "<input class='form-control' type='hidden' name='phone' value='0777123456'  >"
-				+ "<input class='form-control' type='hidden' name='city' value='Colombo' >"
-				+ "<textarea class='form-control' name='address'  hidden>No56, Colombo 07</textarea>"
+				+ "<input type='hidden' name='first_name' value='Amila' >"
+				+ "<input type='hidden' name='last_name'  value='Bandara' >"
+				+ "<input type='hidden' name='email' value='testpayment@gmail.com'  >"
+				+ "<input type='hidden' name='phone' value='0777123456'  >"
+				+ "<input type='hidden' name='city' value='Colombo' >"
+				+ "<textarea  name='address'  hidden>No56, Colombo 07</textarea>"
 				+ "<button type='submit' class='btn btn-danger' >Make Payment</button>"
 				+ "</form>";
-		
+				//end payment gateway SDK form 
 		
 		output += "</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";
-		//end buttons
+		
 		
 		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\"><div class=\"table-responsive\"><table class=\"table\">";
 		output +="<thead><th><strong>PRODUCT</strong><br></th><th><strong>PRICE</strong><br></th><th><strong>QUANTITY</strong><br></th><th><strong>REMOVE</strong><br></th><tr></thead>";
@@ -280,8 +283,60 @@ public class BuyProductsModel {
 	
 	
 	
-	//paymentSuccess success page
+	//paymentSuccess  page
 	public String paymentSuccessPage(String loggedUsername , String orderId) {
+		
+		
+		//fetch cart items and insert them into mydownloads table
+		String loadCartItemsSql =  "SELECT * FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"'";
+		Connection conn = connect();
+		
+		
+		try {
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(loadCartItemsSql);
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				
+				String productId = rs.getString("productId");
+				
+				
+				//InsertInto mydownloads
+				String insertIntoMyDownloads = "INSERT INTO mydownloads (paidUsername, paidProductId) VALUES (?,?)";
+				PreparedStatement pstmt2;
+				pstmt2 = conn.prepareStatement(insertIntoMyDownloads,Statement.RETURN_GENERATED_KEYS);
+				pstmt2.setString(1, loggedUsername);
+				pstmt2.setString(2, productId);
+				
+				pstmt2.executeUpdate();
+				//end insert into mydownloads
+				
+				
+				//make the cart empty
+				String makeCartEmptySql = "DELETE FROM cart WHERE loggedUsername = '"+loggedUsername+"' ";
+				try {
+
+					Statement stmt3 = conn.createStatement();
+					stmt3.executeUpdate(makeCartEmptySql);
+					
+
+				} catch (SQLException e) {
+					
+					e.printStackTrace();
+				}
+				
+			}
+			
+			
+			
+		} catch (SQLException e) {
+
+
+			e.printStackTrace();
+		}
+		
+		
 		
 		String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
 		
@@ -289,11 +344,107 @@ public class BuyProductsModel {
 		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
 		
 		output += "<h1>Payment was successful</h1><p><strong>Yay! It's done. Your&nbsp;<em>ORDER_ID</em>&nbsp;is "+orderId+"</strong><br></p>"
-				+ "<p>Visit &nbsp;<a href='../../../GB/paymentService/products/myDownloads'>My Downloads</a>&nbsp;page to access above products any time!<br></p>";
+				+ "<p>Visit &nbsp;<a href='../../../GB/paymentService/products/myDownloads'>My Downloads</a>&nbsp;page to access your products any time!<br></p>";
 		
 		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
 		
 		return output;
+		
+	}
+	
+	
+	//paymentUnsuccess  page
+	public String paymentUnsuccessPage(String loggedUsername , String orderId) {
+		
+		String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
+		
+		
+		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
+		
+		output += "<h1>Payment was unsuccessful</h1><p><strong>Oops! Something went wrong! Your&nbsp;<em>ORDER_ID</em>&nbsp;is "+orderId+"</strong><br></p>"
+				+ "<p>If the issue persists, &nbsp;<a href='../../../GB/paymentService/products/cart'>Try Again</a>&nbsp;in a few minutes.<br></p>";
+		
+		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+		
+		return output;
+		
+	}	
+	
+	
+	//my downloads page
+	public String myDownloads(String loggedUsername) {
+		
+		String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
+	
+		Connection conn = connect();
+		
+		if (conn == null){
+			return "Error while connecting to the database for inserting."; 
+		}else {
+			
+			
+			output += "<div class=\"container\"> <div class=\"row\"> <div class=\"col-md-4 col-lg-1\"></div> <div class=\"col-md-4 col-lg-10 text-center\"> <h1 class=\"text-center\">My Downloads</h1><br>"
+					+ "<div class=\"table-responsive\">"
+					+ "<table class=\"table\">"
+					+ "<thead> <tr> "
+					+ "<th>Product Name</th> "
+					+ "<th>Short Description</th> "
+					+ "<th>Download Link<br></th> "
+					+ "</tr> </thead> ";
+			
+			
+			
+			try {
+				
+				String getDownloadAccessSql = "SELECT * FROM mydownloads md WHERE md.paidUsername = '"+loggedUsername+"' ";
+				
+				Statement stmt;
+				stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(getDownloadAccessSql);
+				
+				
+				while (rs.next())
+				{
+					String paidProductId = rs.getString("paidProductId");
+		        	
+		        	
+		        	//get Product details from product table
+					String getProductDetailsSql = "SELECT * FROM testproducts tp WHERE tp.productId = '"+paidProductId+"' ";
+					Statement stmt2;
+					stmt2 = conn.createStatement();
+					ResultSet rs2 = stmt2.executeQuery(getProductDetailsSql);
+					
+		        	while(rs2.next()) {
+		        		
+		        		String productName = rs2.getString("name");
+		        		String shortDescription = rs2.getString("sDesc");
+		        		String downloadLink = rs2.getString("downloadLink");
+		        		
+		        		output += "<tbody> <tr> <td>"+productName+"</td> <td>"+shortDescription+"</td> <td><a href ="+downloadLink+" target='_blank'>Click Here</a></td></tr></tbody>";
+		        	
+		        	}
+		        	
+		        	
+		       
+		        	
+		        	
+				}
+				
+				conn.close();
+				
+			} catch (SQLException e) {
+				output = "Error while fetching products";
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+			}
+			
+			output += "</table></div></div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+				
+			
+		}
+		
+		return output;
+		
 		
 	}
 	

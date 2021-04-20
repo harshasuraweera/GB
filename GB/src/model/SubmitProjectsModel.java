@@ -53,10 +53,10 @@ public class SubmitProjectsModel {
 					+ "<input type='text' name='Project_Title' required onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\"><br><br>"
 					+ "<textarea class=\"form-control\" name=\"Project_ShortDes\" style=\"height: 170px;\" maxlength=\"100\" placeholder=\"Should be less than 250 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
 					+ "<textarea class=\"form-control\" name=\"Project_LongDes\" style=\"height: 170px;\" maxlength=\"250\" placeholder=\"Should be less than 250 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
-					//+ "<input type='text' name='Project_ShortDes'  required maxlength=\"2\" placeholder=\"Should be less than 250 letters\"><br><br>"
+					
 					+ "<input type='text' name='Project_Srclink' required required placeholder=\\\"https://example.com\\\" pattern=\\\"https://.*\\\" ><br><br>"
 					+ "<input type='text' name='Project_Videolink' value='' required required placeholder=\\\"https://example.com\\\" pattern=\\\"https://.*\\\" ><br><br>"
-					+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Projects'></form></center><br><br>";
+					+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Projects' href='../../../GB/projectService/projects/readProjects'></form></center><br><br>";
 			
 	
 		
@@ -69,7 +69,7 @@ public class SubmitProjectsModel {
 	public String AddProjects(String randomProj_ID,String Project_Title, String Project_ShortDes , String Project_LongDes , String Project_Srclink , String Project_Videolink )
 	{
 		
-		String output = "<a href='../../../GB/projectService/projects/readProjects'></a>";
+		String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
   	  
 	    Connection con = connect();
 
@@ -87,12 +87,27 @@ public class SubmitProjectsModel {
 	    	 	pstmt.setString(5, Project_Srclink);
 	    	 	pstmt.setString(6, Project_Videolink);
 	    	    
-	    	    
 	    	 	pstmt.executeUpdate();
+	    	 	
+	    		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
+	    		
+	    		output += "<h1>Your Project submitted successfully..!</strong><br></p>"
+	    				+ "<p><a href='../../../GB/projectService/projects/readProjects'>View Submitted Projects</a>&nbsp;in a few minutes.<br></p>";
+	    		
+	    		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+	    		
+	    	 	
 	    	 	
 	    	   
 	     }catch (Exception e){
-	    	 output += "error";
+	    	 
+	    	 
+	 		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
+			
+			output += "<h1>Payment was unsuccessful</h1><p><strong>Oops! Something went wrong..! </strong><br></p>"
+					+ "<p>Your project already submitted..! <a href='../../../GB/projectService/projects'>Try Again</a>&nbsp;<br></p>";
+			
+			output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
 	    	     e.printStackTrace();
 	     }
 	
@@ -178,6 +193,7 @@ public class SubmitProjectsModel {
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(deleteProjects);
 			output += "<script>window.history.back();</script>";
+			
 
 		} catch (SQLException e) {
 			output += "Error while removing";
@@ -229,4 +245,9 @@ public class SubmitProjectsModel {
 	}
 	
 
+
+	
+	
+	
+	
 }

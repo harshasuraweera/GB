@@ -73,7 +73,28 @@ public class ProjectService {
 	
 	}
 
-	
+//	@PUT
+//	@Path("/")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.TEXT_PLAIN)
+//	public String updateItem(String itemData)
+//	{
+//	         //Convert the input string to a JSON object
+//	         JsonObject projectObject = new JsonParser().parse(itemData).getAsJsonObject();
+//	         
+//	         //Read the values from the JSON object
+//	         String randomProj_ID = projectObject.get("randomProj_ID").getAsString();
+//	         String Project_Title = projectObject.get("Project_Title").getAsString();
+//	         String Project_ShortDes = projectObject.get("Project_ShortDes").getAsString();
+//	         String Project_LongDes = projectObject.get("Project_LongDes").getAsString();
+//	         String Project_Srclink = projectObject.get("Project_Srclink").getAsString();
+//	         String Project_Videolink = projectObject.get("Project_Videolink").getAsString();
+//	         
+//	         String output = projectObject.updateItem(randomProj_ID, Project_Title, Project_ShortDes, Project_LongDes, Project_Srclink,Project_Videolink);
+//	         
+//	         return output;
+//	
+//	}	
 	
 	
 }

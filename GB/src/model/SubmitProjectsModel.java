@@ -144,7 +144,7 @@ public class SubmitProjectsModel {
 	}
 	
 	//Add New Projects To the system :
-	public String AddProjects(String randomProj_ID,String Project_Title, String Project_ShortDes , String Project_LongDes , String Project_Srclink , String Project_Videolink )
+	public String AddProjects(String Project_Title, String Project_ShortDes , String Project_LongDes , String Project_Srclink , String Project_Videolink )
 	{
 		
 		String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
@@ -158,7 +158,7 @@ public class SubmitProjectsModel {
 	    	   	pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	    	   
 	    	   
-	    	 	pstmt.setString(1, randomProj_ID);
+	    	 	pstmt.setString(1, generateProjectId());
 	    	 	pstmt.setString(2, Project_Title);
 	    	 	pstmt.setString(3, Project_ShortDes);
 	    	 	pstmt.setString(4, Project_LongDes);
@@ -288,73 +288,67 @@ public class SubmitProjectsModel {
 		return output;
 	}
 	
-	//delete project from system
-	public String deleteProjects( String randomProj_ID) {
+
+	
+	//Update Project Details:
+	public String updateProjects(String randomProj_ID,String Project_Title,String Project_ShortDes,String Project_LongDes,String Project_Srclink,String Project_Videolink) {
+		String output = "";
+		Connection conn = connect();
+		
+		if (conn == null){
+			output += "Status : Error while connecting to the database"; 
+		}else {
+			String updateProjects = "UPDATE projects SET randomProj_ID='"+randomProj_ID+"',Project_Title='"+Project_Title+"', Project_ShortDes='"+Project_ShortDes+"' , Project_LongDes = '"+Project_LongDes+"' , Project_Srclink='"+Project_Srclink+"' ,Project_Videolink='"+Project_Videolink+"' WHERE randomProj_ID ='"+randomProj_ID+"' ";
+			try {
+
+				Statement stmt = conn.createStatement();
+				stmt.executeUpdate(updateProjects);
+				
+				output += "<p><strong>Project Details Successfully Updated..! </strong><br></p>";
+				
+				output += "<script>window.history.back();</script>";
+
+				} catch (SQLException e) {
+					output += "Error while updating";
+					e.printStackTrace();
+				}	
+		}
+		
+		
+		return output;
+	}
+	
+	//delete item from cart
+	public String deleteProject( String randomProj_ID) {
 		
 		
 		String output = "";
 		Connection conn = connect();
-		String deleteProjects = "DELETE FROM projects WHERE randomProj_ID = '"+randomProj_ID+"' ";
+		String deleteFromCartSql = "DELETE FROM projects WHERE randomProj_ID = '"+randomProj_ID+"' ";
 		
-		try {
+		if (conn == null){
+			output += "Status : Error while connecting to the database"; 
+		}else {
+			try {
 
 			Statement stmt = conn.createStatement();
-			stmt.executeUpdate(deleteProjects);
-			output += "<script>window.history.back();</script>";
+			int status = stmt.executeUpdate(deleteFromCartSql);
 			
-
-		} catch (SQLException e) {
-			output += "Error while removing";
-			e.printStackTrace();
-		}
+			if(status>0) {
+			output += "<p><strong>Project Details Successfully Deleted..!</strong><br></p>";
+			}else {
+				output += "Error while deleting";
+			}
+			
+			} catch (SQLException e) {
+				output += "Error while deleting";
+				e.printStackTrace();
+			}
 		
+		}
+
 		return output;
 	}
-	
-	
-	//Update Project Details:
-	public String updateItem(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink , String Project_Videolink) {
-		
-		String output = "";
-		
-		try {
-			
-			Connection con = connect();
-			
-			if (con == null)
-			{return "Error while connecting to the database for updating."; }	
-			
-			// create a prepared statement
-			String query = "UPDATE projects SET randomProj_ID=?,Project_Title=?,Project_ShortDes=?,Project_LongDes=?,Project_Srclink=?,Project_Videolink=? WHERE randomProj_ID=?";
-			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-			
-			// binding values
-			preparedStmt.setString(1, randomProj_ID);
-			preparedStmt.setString(2, Project_Title);
-			preparedStmt.setString(3, Project_ShortDes);
-			preparedStmt.setString(4, Project_LongDes);
-			preparedStmt.setString(5, Project_Srclink);
-			preparedStmt.setString(5, Project_Videolink);
-			
-			// execute the statement
-			preparedStmt.execute(); 
-			con.close(); 
-			
-			output = "Updated successfully";
-			
-		}catch (Exception e){
-			
-			 output = "Error while updating the item.";
-			 System.err.println(e.getMessage());
-		}
-		
-		return output;
-	}
-	
-
-
-	
 	
 	
 	

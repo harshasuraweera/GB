@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class BuyProductsModel {
@@ -372,6 +374,27 @@ public class BuyProductsModel {
 				//end insert into mydownloads
 				
 				
+				
+				
+				//INSERT INTO COMPLETED ORDERS
+				
+				String insertToCompletedOrders = "INSERT INTO completedorders (orderId, productId, orderdate, orderedUser) VALUES (?,?,?,?)";
+				PreparedStatement pstmt3;
+				pstmt3 = conn.prepareStatement(insertToCompletedOrders,Statement.RETURN_GENERATED_KEYS);
+					
+					//get current date
+					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+					LocalDateTime now = LocalDateTime.now();  
+				
+				pstmt3.setString(1, orderId);
+				pstmt3.setString(2, productId);
+				pstmt3.setString(3, dtf.format(now));
+				pstmt3.setString(4, loggedUsername);
+				pstmt3.executeUpdate();
+				
+				
+				
+				
 				//make the cart empty
 				String makeCartEmptySql = "DELETE FROM cart WHERE loggedUsername = '"+loggedUsername+"' ";
 				try {
@@ -506,6 +529,80 @@ public class BuyProductsModel {
 		
 		
 	}
+	
+	
+	
+	
+	//completed Orders List
+	public String completedOrders(String loggedUsername){
+		
+		String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
+		
+		Connection conn = connect();
+		
+		if (conn == null){
+			return "Error while connecting to the database for inserting."; 
+		}else {
+			
+			
+			output += "<div class=\"container\"> <div class=\"row\"> <div class=\"col-md-4 col-lg-1\"></div> <div class=\"col-md-4 col-lg-10 text-center\"> <h1 class=\"text-center\">All Completed Orders</h1><br>"
+					+ "<div class=\"table-responsive\">"
+					+ "<table class=\"table\">"
+					+ "<thead> <tr> "
+					+ "<th>Order Id</th> "
+					+ "<th>Product ID</th> "
+					+ "<th>Order Date<br></th>"
+					+ "<th>Ordered Username<br></th>"
+					+ "</tr> </thead> ";
+			
+			
+			
+			try {
+				
+				String fetchAllOrders = "SELECT * FROM completedorders co WHERE co.orderedUser = '"+loggedUsername+"' ";
+				
+				Statement stmt;
+				stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(fetchAllOrders);
+				
+				
+				while (rs.next())
+				{
+					
+		        		
+		        		String orderId = rs.getString("orderId");
+		        		String productId = rs.getString("productId");
+		        		String OrderedDate = rs.getString("orderdate");
+		        		String orderedUsername = rs.getString("orderedUser");
+		        		
+		        		output += "<tbody> <tr> <td>"+orderId+"</td> <td>"+productId+"</td><td>"+OrderedDate+"</td><td>"+orderedUsername+"</td> </tr></tbody>";
+			        	
+		        	
+				}
+				
+				conn.close();
+				
+			} catch (SQLException e) {
+				output = "Error while fetching order list";
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+			}
+			
+			output += "</table></div></div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+				
+			
+		}
+		
+		return output;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

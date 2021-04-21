@@ -147,7 +147,6 @@ public class ViewProductService {
 	 * */
 	@GET
 	@Path("/myDownloads")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
 	public String myDownloads() throws SQLException{
 		
@@ -155,6 +154,18 @@ public class ViewProductService {
 		return output;
 	}
 	
+	
+	/* In here company users can take a report of completed order list
+	 * */
+	@GET
+	@Path("/completedOrders")
+	@Produces(MediaType.TEXT_HTML)
+	public String complatedOrders()  throws SQLException{
+		
+		String output = buyProductsModel.completedOrders("U001");
+		return output;
+		
+	}
 	
 
 }

@@ -168,12 +168,17 @@ public class BuyProductsModel {
 			//get total cost of the cart items
 			int total = 0;
 			try {
-				String sql = "SELECT SUM(productPrice) FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"' ";
+				String sql = "SELECT * FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"' ";
 				Statement st;
 				st = conn.createStatement();
 				ResultSet rs = st.executeQuery(sql);
-				rs.next(); 
-				total = rs.getInt(1);
+				
+				while(rs.next()) {
+					String singleProductPrice = rs.getString("productPrice");
+					String singleProductQuantity = rs.getString("quantity");
+					total = total + (Integer.parseInt(singleProductPrice) * Integer.parseInt(singleProductQuantity));
+					
+				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
@@ -243,12 +248,13 @@ public class BuyProductsModel {
 		        	String quantityInCart = rs2.getString("quantity");
 		        	String productPriceInCart = rs2.getString("productPrice");
 		        	String cartId = rs2.getString("cartId");
-		        	
+		        	int totPrice = Integer.parseInt(productPriceInCart)*Integer.parseInt(quantityInCart);
+		   
 		        	output += ""; 
 		        	
 		        	output += "<tbody><tr>"
 		        			+ "<td>"+productNameInCart+"</td>"
-		        					+ "<td>"+productPriceInCart+".00 LKR</td>"
+		        					+ "<td>"+totPrice+".00 LKR</td>"
 		        							+ "<td>"
 		        									+ "<form action='../../../GB/paymentService/products/updateCart' method='post'><input style='width:50px;' type='number' name='newQuantity' value='"+quantityInCart+"'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Update</button></form>"
 		        									+ "</td>"
@@ -415,7 +421,7 @@ public class BuyProductsModel {
 		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
 		
 		output += "<h1>Payment was unsuccessful</h1><p><strong>Oops! Something went wrong! Your&nbsp;<em>ORDER_ID</em>&nbsp;is "+orderId+"</strong><br></p>"
-				+ "<p>If the issue persists, &nbsp;<a href='../../../GB/paymentService/products/cart'>Try Again</a>&nbsp;in a few minutes.<br></p>";
+				+ "<p>If the issue persists, try again in few minitues. &nbsp;<a href='../../../GB/paymentService/products/'>Back To Home</a><br></p>";
 		
 		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
 		

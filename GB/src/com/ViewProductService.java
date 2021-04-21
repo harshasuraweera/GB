@@ -149,7 +149,7 @@ public class ViewProductService {
 	@Path("/myDownloads")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
-	public String myDownloads(@QueryParam("order_id") String order_id) throws SQLException{
+	public String myDownloads() throws SQLException{
 		
 		String output = buyProductsModel.myDownloads("U001");
 		return output;

@@ -22,7 +22,9 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/HP/Downloads/Telegram Desktop/jsoup-1.13.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/HP/Downloads/Telegram Desktop/mysql-connector-java-8.0.23 (2).jar"/>
+
+
+	<classpathentry kind="lib" path="C:/Users/user/Downloads/Telegram Desktop/jsoup-1.13.1.jar"/>
+
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

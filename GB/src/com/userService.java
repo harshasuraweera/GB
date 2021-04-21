@@ -2,6 +2,7 @@ package com;
 
 import model.user;
 
+
 import java.sql.SQLException;
 //For REST Service
 import javax.ws.rs.*;
@@ -18,14 +19,14 @@ public class userService {
 	
 	user userObj = new user();
 	@GET
-	@Path("/read")
+	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
 	public String readusers() {
 		return userObj.readuser();
 	}
 	
 	@POST
-	@Path("/insert") 
+	@Path("/") 
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
 	@Produces(MediaType.TEXT_PLAIN) 
 	public String insertuser(@FormParam("userName") String userName,
@@ -38,7 +39,7 @@ public class userService {
 	}
 	
 	@PUT
-	@Path("/update") 
+	@Path("/") 
 	@Consumes(MediaType.APPLICATION_JSON) 
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateuser(String userData) {
@@ -48,17 +49,17 @@ public class userService {
 		
 		//Read the values from the JSON object
 		String userID = userObject.get("userID").getAsString();
-		String userName = userObject.get("userName").getAsString();
+		String userName1 = userObject.get("userName1").getAsString();
 		String userEmail = userObject.get("userEmail").getAsString();
 		String userMobile = userObject.get("userMobile").getAsString();
 		String userPW = userObject.get("userPW").getAsString();
-		String output = userObj.updateuser(userID, userName, userEmail, userMobile, userPW);
+		String output = userObj.updateuser(userID, userName1, userEmail, userMobile, userPW);
 		return output;
 		
 	}
 	
 	@DELETE
-	@Path("/delete")
+	@Path("/")
 	@Consumes(MediaType.APPLICATION_XML) 
 	@Produces(MediaType.TEXT_PLAIN) 
 	public String deleteuser(String userData) {

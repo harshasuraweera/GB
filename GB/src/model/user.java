@@ -39,19 +39,19 @@ public class user {
 			}
 			
 			// create a prepared statement
-			String query = "insert into user('userID', 'userName', 'userEmail', 'userMobile', 'userPW')"
-			+ " values (?, ?, ?, ?, ?)";		
-			PreparedStatement preparedStmt = con.prepareStatement(query);
+			String query = "insert into user( userName, userEmail, userMobile, userPW)"
+			+ " values ( ?, ?, ?, ?)";		
+			PreparedStatement Stmt;
+	        Stmt = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 			
 			// binding values
-			preparedStmt.setInt(1,0 );
-			preparedStmt.setString(2, userName);
-			preparedStmt.setString(3, userEmail);
-			preparedStmt.setString(4, userMobile);
-			preparedStmt.setNString(5, userPW);
+			Stmt.setString(1, userName);
+			Stmt.setString(2, userEmail);
+			Stmt.setString(3, userMobile);
+			Stmt.setString(4, userPW);
 			
 			// execute the statement
-			preparedStmt.execute();
+			Stmt.executeUpdate();
 			con.close();
 			output = "Insert Successfull";
 			
@@ -150,7 +150,7 @@ public class user {
 			preparedsStmt.setInt(5, Integer.parseInt(userID));
 			
 			// execute the statement
-			preparedsStmt.execute();
+			preparedsStmt.executeUpdate();
 			con.close();
 			output = "Updated successfully";
 			

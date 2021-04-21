@@ -1,6 +1,7 @@
 package model;
 
 
+
 public class BuyProductsModel {
 
 import java.sql.Connection;
@@ -629,8 +630,4 @@ public class BuyProductsModel {
 	
 	
 	
-	
-	
-
-
 }

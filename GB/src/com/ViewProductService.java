@@ -3,6 +3,10 @@ package com;
 
 public class ViewProductService {
 
+
+
+public class ViewProductService {
+
 import java.sql.SQLException;
 
 //For REST Service
@@ -168,7 +172,6 @@ public class ViewProductService {
 		return output;
 		
 	}
-	
 
 
 }

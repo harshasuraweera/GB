@@ -1,5 +1,7 @@
 package com;
-import model.BuyProductsModel;
+
+
+public class ViewProductService {
 
 import java.sql.SQLException;
 
@@ -167,5 +169,6 @@ public class ViewProductService {
 		
 	}
 	
+
 
 }

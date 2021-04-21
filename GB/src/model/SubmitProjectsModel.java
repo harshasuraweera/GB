@@ -304,7 +304,7 @@ public class SubmitProjectsModel {
 				Statement stmt = conn.createStatement();
 				stmt.executeUpdate(updateProjects);
 				
-				output += "<p><strong>Project Details Successfully Updated..! </strong><br></p>";
+				output += "<p><strong>Your Project Details Successfully Updated..! </strong><br></p>";
 				
 				output += "<script>window.history.back();</script>";
 

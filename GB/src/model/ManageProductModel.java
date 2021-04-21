@@ -53,16 +53,98 @@ String productId = generateProductId() ;
 
 
 	
-	output +="<center><form action='../../../GB/productService/product_view/AddProduct' method='post'>"
-			+ "<h2>STOCK YOUR SHOP</h2><br>"
-			+ "<input type='text' name='productId' value="+productId+" readonly><br><br>"
-			+ "<input type='text' name='title' required><br><br>"
-			+ "<textarea class=\"form-control\" name=\"sDesc\" style=\"height: 170px;\" style=\"width: 50px;\" maxlength=\"200\" placeholder=\"Should be less than 200 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
-			+ "<textarea class=\"form-control\" name=\"lDesc\" style=\"height: 500px;\" maxlength=\"500\" placeholder=\"Should be less than 500 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
-			+ "<input type='text' name='price' required ><br><br>"
-			+ "<input type='file' name='downloadLink' required><br><br>"
-			+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Products'>"
-			+ "</form></center>";
+	output +="<style>\r\n" + 
+			"* {\r\n" + 
+			"  box-sizing: border-box;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			"input[type=text], select, textarea {\r\n" + 
+			"  width: 100%;\r\n" + 
+			"  padding: 12px;\r\n" + 
+			"  border: 1px solid #ccc;\r\n" + 
+			"  border-radius: 4px;\r\n" + 
+			"  resize: vertical;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			"label {\r\n" + 
+			"  padding: 12px 12px 12px 0;\r\n" + 
+			"  display: inline-block;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			"input[type=submit] {\r\n" + 
+			"  background-color: #4CAF50;\r\n" + 
+			"  color: white;\r\n" + 
+			"  padding: 12px 20px;\r\n" + 
+			"  border: none;\r\n" + 
+			"  border-radius: 4px;\r\n" + 
+			"  cursor: pointer;\r\n" + 
+			"  float: right;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			"input[type=submit]:hover {\r\n" + 
+			"  background-color: #45a049;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			".container {\r\n" + 
+			"  border-radius: 50px;\r\n" + 
+			"  width: 1300px;\r\n" + 
+			"  height: 600px;\r\n" +
+			"  margin-left: 8%;;\r\n" + 
+			"  background-color: #e8fdf2;\r\n" + 
+			"  padding: 50px;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			".col-25 {\r\n" + 
+			"  float: left;\r\n" + 
+			"  width: 25%;\r\n" + 
+			"  margin-top: 6px;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			".col-75 {\r\n" + 
+			"  float: left;\r\n" + 
+			"  width: 75%;\r\n" + 
+			"  margin-top: 6px;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			"/* Clear floats after the columns */\r\n" + 
+			".row:after {\r\n" + 
+			"  content: \"\";\r\n" + 
+			"  display: table;\r\n" + 
+			"  clear: both;\r\n" + 
+			"}\r\n" + 
+			"\r\n" + 
+			"/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */\r\n" + 
+			"@media screen and (max-width: 300px) {\r\n" + 
+			"  .col-25, .col-75, input[type=submit] {\r\n" + 
+			"    width: 100%;\r\n" + 
+			"    margin-top: 0;\r\n" + 
+			"  }\r\n" + 
+			"}\r\n" + 
+			"hr.new5 {\r\n" + 
+			"  border: 10px solid green;\r\n" + 
+			"  border-radius: 5px;\r\n" + 
+			"}h3 {\r\n" + 
+			"  text-align: center;\r\n" + 
+			"  text-transform: uppercase;\r\n" + 
+			"  color: #4CAF50;\r\n" + 
+			"}\r\n" + 
+			"hr.new4 {\r\n" + 
+			"  border: 1px solid green;\r\n" + 
+			"}</style>"
+			+"\"<center><h3> - Add New Product -</h3></center><hr class=\"new4\"><br><div class=\"container\"><form action='../../../GB/productService/product_view/AddProduct' method='post'>"
+			
+			+ "<div class=\"row\"><div class=\"col-25\"><label>Product ID :</label></div><div class=\"col-75\"><input type='text' name='productId' value="+productId+" readonly></div></div><br><br>"
+			+ "<div class=\"row\"><div class=\"col-25\"><label>Product Title :</label></div><div class=\"col-75\"><input type='text' name='title' required></div></div><br><br>"
+			+ "<div class=\"row\"><div class=\"col-25\"><label>Short Description :</label></div><div class=\"col-75\"><textarea class=\"form-control\" name=\"sDesc\" style=\"height: 50px;\" style=\"width: 50px;\" maxlength=\"200\" placeholder=\"Should be less than 50 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea></div></div><br><br>"
+			+ "<div class=\"row\"><div class=\"col-25\"><label>Long Description  :</label></div><div class=\"col-75\"><textarea class=\"form-control\" name=\"lDesc\" style=\"height: 100px;\" maxlength=\"500\" placeholder=\"Should be less than 100 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea></div></div><br><br>"
+			+ "<div class=\"row\"><div class=\"col-25\"><label>Price:</label></div><div class=\"col-75\"><input type='number'  style=\"height: 50px;\" style=\"width: 100px;\" placeholder=\"USD\"  name='price' required ></div></div><br><br>"
+			+ "<div class=\"row\"><div class=\"col-25\"><label>Download Link :</label></div><div class=\"col-75\"><input type='file' name='downloadLink' required></div></div><br><br>"
+			+ "<input class=\"btn btn-primary\" style=\"margin:5px;\" type=\"submit\" value='Add Products'>"
+			
+			+ "</form>"
+			+ "<form action='../../../GB/productService/product_view/load' method='get'>\"<input class=\"btn btn-primary\" type=\"submit\" value='View Details'>"
+			+"</form>"
+			+ "</center>";
 	
 	
 	
@@ -137,7 +219,7 @@ public String addProduct(String productId,String title,String sDesc,String lDesc
 
 public String loadProducts() {
 	
-	String output = "";
+	String output = "<script>setTimeout('location.reload(true);', 2000);</script>";
 	
 	try {
 		
@@ -147,7 +229,36 @@ public String loadProducts() {
 		 {return "Error while connecting to the database for reading."; } 
 		
 		// Prepare the html table to be displayed
-		 output = "<table border='1'><tr><th>Product ID</th>"+
+		 output += 
+				 "<style>"
+							+ "\r\n" + 
+							"table {\r\n" + 
+							"  border-collapse: collapse;\r\n" + 
+							"  width: 100%;\r\n" + 
+							"}\r\n" + 
+							"\r\n" + 
+							"th, td {\r\n" + 
+							"  padding: 8px;\r\n" + 
+							"  text-align: left;\r\n" + 
+							"  border-bottom: 1px solid #ddd;\r\n" + 
+							"}\r\n" +  ".button {\r\n" + 
+									"  background-color: #4CAF50; /* Green */\r\n" + 
+									"  border: none;\r\n" + 
+									"  color: white;\r\n" + 
+									"  padding: 10px 10px;\r\n" + 
+									"  text-align: center;\r\n" + 
+									"  text-decoration: none;\r\n" + 
+									"  display: inline-block;\r\n" + 
+									"  font-size: 14px;\r\n" + 
+									"  margin: 3px 2px;\r\n" + 
+									"  cursor: pointer;\r\n" + 
+									"}\r\n" + 
+									".button2 {background-color: #4CAF50;} /* green */\r\n" + 
+									".button3 {background-color: #f44336;} /* Red */"
+									+ " hr.new4 {\r\n" + 
+									"  border: 1px solid green;\r\n" + 
+									"}</style>" + 
+		 		"<center><button class=\"button button2\" onclick=\"window.location.href='../../../GB/productService/product_view'\">Add New Project</button></center><br><br><table border='1'><tr><th>Product ID</th>"+
 		 "<th>Product Title</th>" +
 		 "<th>Short Description </th>" +
 		 "<th>Long Description</th>" +
@@ -181,8 +292,8 @@ public String loadProducts() {
 			 
 			 
 			// buttons
-			 output += "<td><input name='btnUpdate' type='button' value='Update'class='btn btn-secondary'></td>"
-			 		+ "<td><form action='../../../GB/productService/product_view/removeProduct' method='post'><input type='hidden' name='productId' value="+productId+" ><button type='submit'>Remove</button>"
+			 output += "<td><input name='btnUpdate' type='button' class=\"button button2\" value='Update'class='btn btn-secondary'></td>"
+			 		+ "<td><form action='../../../GB/productService/product_view/removeProduct' method='post' ><input type='hidden' name='productId' value="+productId+" ><button class=\"button button3\"  type='submit'>Remove</button>"
 			 		+ "</form></td></tr>"; 
 			 
 		 }
@@ -207,7 +318,7 @@ public String loadProducts() {
 }
  
 	
-//delete item from Table
+//delete products from Table
 	public String deleteProduct( String productId) {
 		
 		
@@ -256,6 +367,21 @@ public String loadProducts() {
 		 
 		 // execute the statement
 		 preparedStmt.execute();
+		 
+		 output +="<center><form action='../../../GB/productService/product_view/updateDetails' method='post'>"
+					+ "<h2>STOCK YOUR SHOP</h2><br>"
+					+ "<input type='text' name='productId' value="+productId+" readonly><br><br>"
+					+ "<input type='text' name='title' required><br><br>"
+					+ "<textarea class=\"form-control\" name=\"sDesc\" style=\"height: 170px;\" style=\"width: 50px;\" maxlength=\"200\" placeholder=\"Should be less than 200 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
+					+ "<textarea class=\"form-control\" name=\"lDesc\" style=\"height: 500px;\" maxlength=\"500\" placeholder=\"Should be less than 500 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
+					+ "<input type='text' name='price' required ><br><br>"
+					+ "<input type='file' name='downloadLink' required><br><br>"
+					+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Products'>"
+					+ "</form></center>";
+		 
+		 
+		 
+		 
 		 con.close();
 		 output = "Updated successfully";
 		 

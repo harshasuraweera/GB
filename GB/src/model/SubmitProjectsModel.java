@@ -48,15 +48,93 @@ public class SubmitProjectsModel {
 		
 		String output = "";
 		
-			output +="<center><label>- Add New Project -</label><form action='../../../GB/projectService/projects/AddProject' method='post'><br><br>"
-					+ "<input type='text' name='randomProj_ID' value='"+Project_Id+"' readonly><br><br>"
-					+ "<input type='text' name='Project_Title' required onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\"><br><br>"
-					+ "<textarea class=\"form-control\" name=\"Project_ShortDes\" style=\"height: 170px;\" maxlength=\"100\" placeholder=\"Should be less than 250 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
-					+ "<textarea class=\"form-control\" name=\"Project_LongDes\" style=\"height: 170px;\" maxlength=\"250\" placeholder=\"Should be less than 250 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
+			output +="<style>\r\n" + 
+					"* {\r\n" + 
+					"  box-sizing: border-box;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					"input[type=text], select, textarea {\r\n" + 
+					"  width: 100%;\r\n" + 
+					"  padding: 12px;\r\n" + 
+					"  border: 1px solid #ccc;\r\n" + 
+					"  border-radius: 4px;\r\n" + 
+					"  resize: vertical;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					"label {\r\n" + 
+					"  padding: 12px 12px 12px 0;\r\n" + 
+					"  display: inline-block;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					"input[type=submit] {\r\n" + 
+					"  background-color: #4CAF50;\r\n" + 
+					"  color: white;\r\n" + 
+					"  padding: 12px 20px;\r\n" + 
+					"  border: none;\r\n" + 
+					"  border-radius: 4px;\r\n" + 
+					"  cursor: pointer;\r\n" + 
+					"  float: right;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					"input[type=submit]:hover {\r\n" + 
+					"  background-color: #45a049;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					".container {\r\n" + 
+					"  border-radius: 50px;\r\n" + 
+					"  width: 1300px;\r\n" + 
+					"  height: 600px;\r\n" +
+					"  margin-left: 8%;;\r\n" + 
+					"  background-color: #e8fdf2;\r\n" + 
+					"  padding: 50px;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					".col-25 {\r\n" + 
+					"  float: left;\r\n" + 
+					"  width: 25%;\r\n" + 
+					"  margin-top: 6px;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					".col-75 {\r\n" + 
+					"  float: left;\r\n" + 
+					"  width: 75%;\r\n" + 
+					"  margin-top: 6px;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					"/* Clear floats after the columns */\r\n" + 
+					".row:after {\r\n" + 
+					"  content: \"\";\r\n" + 
+					"  display: table;\r\n" + 
+					"  clear: both;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					"/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */\r\n" + 
+					"@media screen and (max-width: 300px) {\r\n" + 
+					"  .col-25, .col-75, input[type=submit] {\r\n" + 
+					"    width: 100%;\r\n" + 
+					"    margin-top: 0;\r\n" + 
+					"  }\r\n" + 
+					"}\r\n" + 
+					"hr.new5 {\r\n" + 
+					"  border: 10px solid green;\r\n" + 
+					"  border-radius: 5px;\r\n" + 
+					"}h3 {\r\n" + 
+					"  text-align: center;\r\n" + 
+					"  text-transform: uppercase;\r\n" + 
+					"  color: #4CAF50;\r\n" + 
+					"}\r\n" + 
+					"hr.new4 {\r\n" + 
+					"  border: 1px solid green;\r\n" + 
+					"}</style>"
+					+ "<center><h3> - Add New Project -</h3></center><hr class=\"new4\"><br><div class=\"container\"><form action='../../../GB/projectService/projects/AddProject' method='post'>"
+					+ "<div class=\"row\"><div class=\"col-25\"><label>Project ID :</label></div><div class=\"col-75\"><input type='text' name='randomProj_ID' value='"+Project_Id+"' readonly></div></div><br>"
+					+ "<div class=\"row\"><div class=\"col-25\"><label>Project Title :</label></div><div class=\"col-75\"><input type='text' name='Project_Title' required onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\"</div></div><br>>"
+					+ "<div class=\"row\"><div class=\"col-25\"><label>Short Description  :</label></div><div class=\"col-75\"><textarea class=\"form-control\" name=\"Project_ShortDes\"  maxlength=\"100\" placeholder=\"Should be less than 250 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea></div></div><br>"
+					+ "<div class=\"row\"><div class=\"col-25\"><label>Long Description  :</label></div><div class=\"col-75\"><textarea class=\"form-control\" name=\"Project_LongDes\"  maxlength=\"250\" placeholder=\"Should be less than 250 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea></div></div><br>"
 					
-					+ "<input type='text' name='Project_Srclink' required required placeholder=\\\"https://example.com\\\" pattern=\\\"https://.*\\\" ><br><br>"
-					+ "<input type='text' name='Project_Videolink' value='' required required placeholder=\\\"https://example.com\\\" pattern=\\\"https://.*\\\" ><br><br>"
-					+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Projects' href='../../../GB/projectService/projects/readProjects'></form></center><br><br>";
+					+ "<div class=\"row\"><div class=\"col-25\"><label>Source Link :<br></label></div><div class=\"col-75\"><input type='text' name='Project_Srclink' required required placeholder=\"(Upload your project into google drive and put the link)      Ex: https://example.com\" pattern=\"https://.*\" ></div></div><br>"
+					+ "<div class=\"row\"><div class=\"col-25\"><label>Video Link :<br></label></div><div class=\"col-75\"><input type='text' name='Project_Videolink' value='' required required placeholder=\"(Upload your video into google drive or any social media platform and put the link)     Ex:  https://example.com\" pattern=\"https://.*\" ></div></div><br><br>"
+					+ "<center><input class=\"btn btn-primary\" type=\"submit\" value='Add Projects' href='../../../GB/projectService/projects/readProjects'></center></form></div><br><br>";
 			
 	
 		
@@ -91,8 +169,8 @@ public class SubmitProjectsModel {
 	    	 	
 	    		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
 	    		
-	    		output += "<h1>Your Project submitted successfully..!</strong><br></p>"
-	    				+ "<p><a href='../../../GB/projectService/projects/readProjects'>View Submitted Projects</a>&nbsp;in a few minutes.<br></p>";
+	    		output += "<p><strong>Your Project submitted successfully..!</strong><br></p>"
+	    				+ "<p><a href='../../../GB/projectService/projects/readProjects'>View Submitted Projects</a>&nbsp;<br></p>";
 	    		
 	    		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
 	    		
@@ -104,8 +182,8 @@ public class SubmitProjectsModel {
 	    	 
 	 		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
 			
-			output += "<h1>Payment was unsuccessful</h1><p><strong>Oops! Something went wrong..! </strong><br></p>"
-					+ "<p>Your project already submitted..! <a href='../../../GB/projectService/projects'>Try Again</a>&nbsp;<br></p>";
+			output += "<p><strong>Oops! Something went wrong..! </strong><br></p>"
+					+ "<a href='../../../GB/projectService/projects'>Try Again</a>&nbsp;<br>";
 			
 			output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
 	    	     e.printStackTrace();
@@ -129,8 +207,38 @@ public class SubmitProjectsModel {
 			if (con == null)
 			 {return "Error while connecting to the database for reading."; }
 			
+			//<button onclick="window.location.href='/page2'">Continue</button>
+			
 			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>Project ID</th>" +
+			output = "<style>"
+					+ "\r\n" + 
+					"table {\r\n" + 
+					"  border-collapse: collapse;\r\n" + 
+					"  width: 100%;\r\n" + 
+					"}\r\n" + 
+					"\r\n" + 
+					"th, td {\r\n" + 
+					"  padding: 8px;\r\n" + 
+					"  text-align: left;\r\n" + 
+					"  border-bottom: 1px solid #ddd;\r\n" + 
+					"}\r\n" +  ".button {\r\n" + 
+							"  background-color: #4CAF50; /* Green */\r\n" + 
+							"  border: none;\r\n" + 
+							"  color: white;\r\n" + 
+							"  padding: 10px 10px;\r\n" + 
+							"  text-align: center;\r\n" + 
+							"  text-decoration: none;\r\n" + 
+							"  display: inline-block;\r\n" + 
+							"  font-size: 14px;\r\n" + 
+							"  margin: 3px 2px;\r\n" + 
+							"  cursor: pointer;\r\n" + 
+							"}\r\n" + 
+							".button2 {background-color: #4CAF50;} /* green */\r\n" + 
+							".button3 {background-color: #f44336;} /* Red */"
+							+ " hr.new4 {\r\n" + 
+							"  border: 1px solid green;\r\n" + 
+							"}</style>"
+					+ "<center><button class=\"button button2\" onclick=\"window.location.href='/../../../GB/projectService/projects/'\">Add New Project</button><hr class=\"new4\"></center><br><br><label><b>Your Projects :</b></label><br><br><table border='1' ><tr><th>Project ID</th>" +
 					"<th>Project Title</th>" +
 					"<th>Short Discription</th>" +
 					"<th>Long Discription</th>" +
@@ -161,8 +269,8 @@ public class SubmitProjectsModel {
 				output += "<td>" + Project_Videolink + "</td>";
 				
 			// buttons
-				 output += "<td><input name='btnUpdate' type='button' value='Update'class='btn btn-secondary'></td>"
-		+ "<td><form action='../../../GB/projectService/projects/removeProject' method='post'><input type='hidden' name='randomProj_ID' value="+randomProj_ID+" ><button type='submit'>Remove</button>" + 
+				 output += "<td><input name='btnUpdate' class=\"button button2\" type='button' value='Update'class='btn btn-secondary'></td>"
+		+ "<td><form action='../../../GB/projectService/projects/removeProject' method='post'><input type='hidden' name='randomProj_ID' value="+randomProj_ID+" ><button class=\"button button3\" type='submit'>Remove</button>" + 
 		"</form></td></tr>"; 
 			}
 

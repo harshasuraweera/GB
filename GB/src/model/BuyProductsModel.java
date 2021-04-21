@@ -316,7 +316,7 @@ public class BuyProductsModel {
 				if(status>0) {
 					output += "Status : Successfully updated the cart";	
 				}else {
-					output += "Error while updating";
+					output += "Status : Error while updating";
 				}
 				
 				
@@ -352,7 +352,7 @@ public class BuyProductsModel {
 			if(status>0) {
 				output += "Status : Successfully deleted from the cart";
 			}else {
-				output += "Error while deleting";
+				output += "Status : Error while deleting";
 			}
 			
 

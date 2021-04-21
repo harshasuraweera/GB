@@ -157,7 +157,7 @@ return output;
 
 
 //insert products to  db
-public String addProduct(String productId,String title,String sDesc,String lDesc,String price,String downloadLink) {
+public String addProduct(String title,String sDesc,String lDesc,String price,String downloadLink) {
 	
 	String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
 	Connection conn = connect();
@@ -171,7 +171,7 @@ public String addProduct(String productId,String title,String sDesc,String lDesc
 		
 		
 	
-		pre.setString(1, productId);
+		pre.setString(1, generateProductId());
 		pre.setString(2, title);
 		pre.setString(3, sDesc);
 		pre.setString(4, lDesc);
@@ -199,7 +199,7 @@ public String addProduct(String productId,String title,String sDesc,String lDesc
 		// TODO Auto-generated catch block
 		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
 		
-		output += "<h1>Payment was unsuccessful</h1><p><strong>Oops! Something went wrong! </strong><br></p>"
+		output += "<h1>Submission unsuccessful</h1><p><strong>Oops! Something went wrong! </strong><br></p>"
 				+ "<p>If the issue persists, &nbsp;<a href='../../../GB/productService/product_view'>Try Again!</a>&nbsp;in a few minutes.<br></p>";
 		
 		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
@@ -219,7 +219,7 @@ public String addProduct(String productId,String title,String sDesc,String lDesc
 
 public String loadProducts() {
 	
-	String output = "<script>setTimeout('location.reload(true);', 2000);</script>";
+	String output = "";
 	
 	try {
 		
@@ -326,88 +326,59 @@ public String loadProducts() {
 		Connection conn = connect();
 		String deletesql = "DELETE FROM products WHERE productId = '"+productId+"' ";
 		
+		if(conn == null) {
+			
+			output += "Status : Error while connecting to the database"; 
+		}else {
+		
 		try {
 
 			Statement stmt = conn.createStatement();
-			stmt.executeUpdate(deletesql);
-			output += "<script>window.history.back();</script>";
+			int status=stmt.executeUpdate(deletesql);
+			
+			if(status>0) {
+				output += "Status : Successfully deleted from the table";
+			}else {
+				output += "Error while deleting";
+			}
 
 		} catch (SQLException e) {
 			output += "Error while removing";
 			e.printStackTrace();
+		}
 		}
 		
 		return output;
 	}
 	
 	
-//Update Details
-	public String updateProduct(String productId,String title,String sDesc,String lDesc,String price,String downloadLink) {
-		
-		String output = ""; 
-		try
-		 {
-			Connection con = connect();
-			if (con == null)
-			{	
-				return "Error while connecting to the database for updating.";
-				
-			}
-		 // create a prepared statement
-			String query = "update products set productId=?, title=?,sDesc=?,lDesc=?,price=?,downloadLink=? where  productId=";
-			PreparedStatement preparedStmt = con.prepareStatement(query);
+	//update the cart quantity
+		public String updateProduct( String productId,String title,String sDesc,String lDesc,String price,String downloadLink) {
+			String output = "";
+			Connection conn = connect();
 			
-		 // binding values
-		 preparedStmt.setString(1, productId);
-		 preparedStmt.setString(2, title);
-		 preparedStmt.setString(3, sDesc);
-		 preparedStmt.setString(4, lDesc);
-		 preparedStmt.setString(5, price);
-		 preparedStmt.setString(6, downloadLink);
-		 
-		 // execute the statement
-		 preparedStmt.execute();
-		 
-		 output +="<center><form action='../../../GB/productService/product_view/updateDetails' method='post'>"
-					+ "<h2>STOCK YOUR SHOP</h2><br>"
-					+ "<input type='text' name='productId' value="+productId+" readonly><br><br>"
-					+ "<input type='text' name='title' required><br><br>"
-					+ "<textarea class=\"form-control\" name=\"sDesc\" style=\"height: 170px;\" style=\"width: 50px;\" maxlength=\"200\" placeholder=\"Should be less than 200 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
-					+ "<textarea class=\"form-control\" name=\"lDesc\" style=\"height: 500px;\" maxlength=\"500\" placeholder=\"Should be less than 500 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea><br><br>"
-					+ "<input type='text' name='price' required ><br><br>"
-					+ "<input type='file' name='downloadLink' required><br><br>"
-					+ "<input class=\"btn btn-primary\" type=\"submit\" value='Add Products'>"
-					+ "</form></center>";
-		 
-		 
-		 
-		 
-		 con.close();
-		 output = "Updated successfully";
-		 
-		 
-		 }
-		
-		 catch (Exception e)
-		
-		 {
-			 
-		 output = "Error while updating the item.";
-		 System.err.println(e.getMessage());
-		 }
-		
-		
-		
-		
-		
-		
-		
-		return output;
-		
-		
-		
-		
-	}
+			if (conn == null){
+				output += "Status : Error while connecting to the database"; 
+			}else {
+				String updateSql = "UPDATE products SET title='"+title+"',sDesc='"+sDesc+"',lDesc='"+lDesc+"',price='"+price+"',downloadLink='"+downloadLink+"' WHERE productId ='"+productId+"' ";
+				try {
+
+					Statement stmt = conn.createStatement();
+					stmt.executeUpdate(updateSql);
+					
+					output += "Status : Successfully updated ";
+					
+					output += "<script>window.history.back();</script>";
+
+					} catch (SQLException e) {
+						output += "Error while updating";
+						e.printStackTrace();
+					}	
+			}
+			
+			
+			return output;
+		}
 	
 	
 }

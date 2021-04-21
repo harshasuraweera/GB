@@ -32,14 +32,14 @@ public class ProductService {
 	@Path("/AddProduct")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
-	public String addProduct(@FormParam("productId") String productId,
+	public String addProduct(
 			 @FormParam("title") String title,
 			 @FormParam("sDesc") String sDesc,
 			 @FormParam("lDesc") String lDesc,
 			 @FormParam("price") String price,
 			 @FormParam("downloadLink") String downloadLink) throws SQLException{
 		
-		String output = product.addProduct(productId,title,sDesc,lDesc,price,downloadLink);
+		String output = product.addProduct(title,sDesc,lDesc,price,downloadLink);
 		return output;
 	}
 	
@@ -54,36 +54,41 @@ public class ProductService {
 		return output;
 	}
 	
-	@POST
+	@DELETE
 	@Path("/removeProduct")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_HTML)
-	public String removeProduct(@FormParam("productId") String productId) throws SQLException{
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String removeProduct(String productData) throws SQLException{
 		
-		String output = product.deleteProduct(productId);
-		return output;
+		//Convert the input string to an XML document
+				Document doc = Jsoup.parse(productData, "", Parser.xmlParser());
+				
+				//Read the value from the element <itemID>
+				String deleteproductId= doc.select("productId").text();
+				
+				String output = product.deleteProduct(deleteproductId);
+				
+				return output;
 	}
 	
 	@PUT
 	@Path("/updateDetails")
-	@Consumes(MediaType.APPLICATION_JSON)
-	
-	 
+	@Consumes(MediaType.APPLICATION_JSON) 
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updateProduct(String itemData)
+	public String updateProduct(String productData)
 	{
 		
 		
 	//Convert the input string to a JSON object
-	 JsonObject itemObject = new JsonParser().parse(itemData).getAsJsonObject();
+	 JsonObject productObject = new JsonParser().parse(productData).getAsJsonObject();
 	 
 	//Read the values from the JSON object
-	 String productId = itemObject.get("productId").getAsString();
-	 String title = itemObject.get("title").getAsString();
-	 String sDesc = itemObject.get("sDesc").getAsString();
-	 String lDesc = itemObject.get("lDesc").getAsString();
-	 String price = itemObject.get("price").getAsString();
-	 String downloadLink = itemObject.get("downloadLink").getAsString();
+	 String productId = productObject.get("productId").getAsString();
+	 String title = productObject.get("title").getAsString();
+	 String sDesc = productObject.get("sDesc").getAsString();
+	 String lDesc = productObject.get("lDesc").getAsString();
+	 String price = productObject.get("price").getAsString();
+	 String downloadLink = productObject.get("downloadLink").getAsString();
 	 String output = product.updateProduct(productId, title, sDesc, lDesc, price,downloadLink);
 	 
 	 

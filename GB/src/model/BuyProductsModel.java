@@ -2,8 +2,6 @@ package model;
 
 
 
-public class BuyProductsModel {
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

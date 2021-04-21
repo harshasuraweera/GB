@@ -1,11 +1,9 @@
 package com;
 
 
-public class ViewProductService {
 
 
 
-public class ViewProductService {
 
 import java.sql.SQLException;
 
@@ -14,6 +12,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 //For JSON
 import com.google.gson.*;
+
+import model.BuyProductsModel;
+
 //For XML
 import org.jsoup.*;
 import org.jsoup.parser.*;

@@ -48,7 +48,13 @@ public class BuyProductsModel {
 				stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql);
 				
-				output += "Status : Successfully fetched products";
+				if(rs.next()) {
+					output += "Status : Successfully fetched products";
+				}else {
+					output += "Status : Error while fetching products";
+				}
+				
+				
 				
 				output += "<br><br><div class=\"container\"><div class='row' >";
 				
@@ -124,9 +130,15 @@ public class BuyProductsModel {
 				pstmt.setString(4, quantity);
 				pstmt.setString(5, price);
 				
-				pstmt.executeUpdate();
+				int status = pstmt.executeUpdate();
 				
+				if(status>0) {
 					output +="Status : Successfully Added to Cart";
+				}else {
+					output +="Status : Error while adding to cart";
+				}
+				
+					
 					
 					output += "<br><br><div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
 			
@@ -206,7 +218,13 @@ public class BuyProductsModel {
 				stmt2 = conn.prepareStatement(loadCartItemsSql);
 				ResultSet rs2 = stmt2.executeQuery();
 				
-				output += "Status : Successfully fetched cart items";
+				if(rs2.next()) {
+					output += "Status : Successfully fetched cart items";
+				}else {
+					output += "Status : Error while fetching items";
+				}
+				
+				
 					  
 				//buttons to "continue shopping" and "processed to payment"
 				output +="<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
@@ -355,7 +373,7 @@ public class BuyProductsModel {
 	//paymentSuccess  page
 	public String paymentSuccessPage(String loggedUsername , String orderId) {
 		
-		
+		String output = "";
 		//fetch cart items and insert them into mydownloads table
 		String loadCartItemsSql =  "SELECT * FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"'";
 		Connection conn = connect();
@@ -365,7 +383,7 @@ public class BuyProductsModel {
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(loadCartItemsSql);
 			ResultSet rs = stmt.executeQuery();
-			
+						
 			while (rs.next()) {
 				
 				String productId = rs.getString("productId");
@@ -428,7 +446,7 @@ public class BuyProductsModel {
 		
 		
 		
-		String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
+		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
 		
 		
 		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";

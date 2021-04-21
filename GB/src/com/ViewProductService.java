@@ -1,10 +1,5 @@
 package com;
 
-
-
-
-
-
 import java.sql.SQLException;
 
 //For REST Service

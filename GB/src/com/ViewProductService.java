@@ -52,16 +52,23 @@ public class ViewProductService {
 	}
 	
 	
-	/* Removing some products from the cart will be done by this
-	 * Once clicked the remove button, the product will delete from the cart table
+	/* Update the quantity of the cart
+	 * Once clicked the update button, the product quantity will be updated at the cart table
 	 * */
-	@POST
-	@Path("/removeFromCart")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_HTML)
-	public String removeFromCart(@FormParam("cartId") String cartId) throws SQLException{
+	@PUT
+	@Path("/updateCart")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateCart(String cartData)
+	{
+		//Convert the input string to a JSON object
+		JsonObject cartObject = new JsonParser().parse(cartData).getAsJsonObject();
 		
-		String output = buyProductsModel.deleteFromCart(cartId);
+		//Read the values from the JSON object
+		int cartId = cartObject.get("cartId").getAsInt();
+		String newQuantity = cartObject.get("newQuantity").getAsString();
+		
+		String output = buyProductsModel.updateCart(cartId, newQuantity);
 		return output;
 	}
 	
@@ -70,14 +77,20 @@ public class ViewProductService {
 	 * Once clicked the remove button, the product will delete from the cart table
 	 * */
 	@DELETE
-	@Path("/removeFromCart")
+	@Path("/deleteFromCart")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_HTML)
-	public String deleteFromCart(String cartId) throws SQLException{
+	public String deleteFromCart(String cartData) throws SQLException{
 		
-		Document doc = Jsoup.parse(cartId, "", Parser.xmlParser());
+		//Convert the input string to an XML document
+		Document doc = Jsoup.parse(cartData, "", Parser.xmlParser());
 		
-		return "";
+		//Read the value from the element <itemID>
+		String deleteCartId = doc.select("cartId").text();
+		
+		String output = buyProductsModel.deleteFromCart(deleteCartId);
+		
+		return output;
 	}
 	
 	

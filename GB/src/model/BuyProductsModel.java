@@ -65,7 +65,7 @@ public class BuyProductsModel {
 		        	
 		        	
 		        	//buttons
-		        	output +="<form action='../productService/products/addToCart' method='post'>"
+		        	output +="<form action='../../../GB/productService/products/addToCart' method='post'>"
 		        			+ "<input type='hidden' name='productId' value="+productId+">"
 		        			+ "<input type='hidden' name='productName' value="+productName+">"
 		        			+ "<input type='hidden' name='shortDescription' value="+shortDescription+">"
@@ -246,10 +246,15 @@ public class BuyProductsModel {
 		        	
 		        	output += ""; 
 		        	
-		        	output += "<tbody><tr><td>"+productNameInCart+"</td><td>"+productPriceInCart+".00 LKR</td><td>"+quantityInCart+"</td>"
+		        	output += "<tbody><tr>"
+		        			+ "<td>"+productNameInCart+"</td>"
+		        					+ "<td>"+productPriceInCart+".00 LKR</td>"
+		        							+ "<td>"
+		        									+ "<form action='../../../GB/paymentService/products/updateCart' method='post'><input style='width:50px;' type='number' name='newQuantity' value='"+quantityInCart+"'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Update</button></form>"
+		        									+ "</td>"
 		        			
 		        			//remove from cart
-		        			+ "<td><form action='../../../GB/paymentService/products/removeFromCart' method='post'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Remove</button></form></td></tr></tbody>";
+		        			+ "<td><form action='../../../GB/paymentService/products/deleteFromCart' method='post'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Remove</button></form></td></tr></tbody>";
 		        	
 		        	
 		        }
@@ -268,6 +273,34 @@ public class BuyProductsModel {
 		
 	}
 	
+	//update the cart quantity
+	public String updateCart( int cartId, String quantity) {
+		String output = "";
+		Connection conn = connect();
+		
+		if (conn == null){
+			output += "Status : Error while connecting to the database"; 
+		}else {
+			String updateCartSql = "UPDATE cart SET quantity='"+quantity+"' WHERE cartId ='"+cartId+"' ";
+			try {
+
+				Statement stmt = conn.createStatement();
+				stmt.executeUpdate(updateCartSql);
+				
+				output += "Status : Successfully updated the cart";
+				
+				output += "<script>window.history.back();</script>";
+
+				} catch (SQLException e) {
+					output += "Error while updating";
+					e.printStackTrace();
+				}	
+		}
+		
+		
+		return output;
+	}
+	
 	
 	//delete item from cart
 	public String deleteFromCart( String cartId) {
@@ -277,16 +310,26 @@ public class BuyProductsModel {
 		Connection conn = connect();
 		String deleteFromCartSql = "DELETE FROM cart WHERE cartId = '"+Integer.parseInt(cartId)+"' ";
 		
-		try {
+		if (conn == null){
+			output += "Status : Error while connecting to the database"; 
+		}else {
+			try {
 
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(deleteFromCartSql);
+			
+			output += "Status : Successfully deleted from the cart";
+			
 			output += "<script>window.history.back();</script>";
 
-		} catch (SQLException e) {
-			output += "Error while removing";
-			e.printStackTrace();
+			} catch (SQLException e) {
+				output += "Error while deleting";
+				e.printStackTrace();
+			}
+		
 		}
+		
+		
 		
 		return output;
 	}

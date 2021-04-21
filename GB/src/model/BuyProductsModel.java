@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class BuyProductsModel {
 	
-	//This method will be connect the payment service databse to the project
+	//This method will be connect the payment service database to the project
 	private Connection connect(){
 		
 		Connection conn = null;
@@ -26,36 +26,29 @@ public class BuyProductsModel {
 	
 	/* By this method, all the products will be retrieving HTML grid view 
 	 * */
-	public String fetchAllProducts(String search){
+	public String fetchAllProducts(){
 		
-		String sql = "";
 		String output = "";
 		Connection conn = connect();
-		
+		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
 		
 		
 		if (conn == null){
-			return "Error while connecting to the database for inserting."; 
+			output += "Status : Error while connecting to the database"; 
 		}else {
-			
-			output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
-		
-			output += "<div class=\"container\"><div class='row' >";
-			
 			
 			
 			try {
 				
-				if(search.equals("all")) {
-					 sql = "SELECT * FROM testproducts";
-				}else if(!search.equals("all")) {
-					 sql = "SELECT * FROM testproducts WHERE name LIKE '%"+search+"%' ";
-				}
+				String sql = "SELECT * FROM testproducts";
 				
 				Statement stmt;
 				stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql);
 				
+				output += "Status : Successfully fetched products";
+				
+				output += "<br><br><div class=\"container\"><div class='row' >";
 				
 				while (rs.next())
 				{
@@ -89,7 +82,7 @@ public class BuyProductsModel {
 				conn.close();
 				
 			} catch (SQLException e) {
-				output = "Error while fetching products";
+				output += "Status : Error while fetching products";
 				System.err.println(e.getMessage());
 				e.printStackTrace();
 			}
@@ -109,42 +102,49 @@ public class BuyProductsModel {
 		
 		String output = "";
 		Connection conn = connect();
-		
 		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
-		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
+			
 		
-		
-		String addToCartSql = "INSERT INTO cart (loggedUsername, productId, productName, quantity, productPrice) VALUES (?,?,?,?,?)";
-		
-		PreparedStatement pstmt;
-		
-		try {
-			pstmt = conn.prepareStatement(addToCartSql,Statement.RETURN_GENERATED_KEYS);
-			pstmt.setString(1, loggedUsername);
-			pstmt.setString(2, productId);
-			pstmt.setString(3, productName);
-			pstmt.setString(4, quantity);
-			pstmt.setString(5, price);
+		if (conn == null){
+			output += "Status : Error while connecting to the database"; 
+		}else {
 			
-			pstmt.executeUpdate();
+				
+			try {
+				
+				String addToCartSql = "INSERT INTO cart (loggedUsername, productId, productName, quantity, productPrice) VALUES (?,?,?,?,?)";
+				
+				PreparedStatement pstmt;
+				pstmt = conn.prepareStatement(addToCartSql,Statement.RETURN_GENERATED_KEYS);
+				pstmt.setString(1, loggedUsername);
+				pstmt.setString(2, productId);
+				pstmt.setString(3, productName);
+				pstmt.setString(4, quantity);
+				pstmt.setString(5, price);
+				
+				pstmt.executeUpdate();
+				
+					output +="Status : Successfully Added to Cart";
+					
+					output += "<br><br><div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
 			
-			output += "<h1 class=\"text-center\">Successfully Added to Cart</h1><br>"
-					+ "<div class=\"btn-group\" role=\"group\">"
-					+ "<a href='../../../GB/productService/products'><button type='submit' class='btn btn-primary' >Continue Shopping</button></a>"
-					+ "<form method='post' action='../../../GB/paymentService/products/cart'>"
-					+ "<button type='submit' class='btn btn-danger' >Processed to Checkout</button></form>";
-			
-			output +="</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";
-			
-			
-			conn.close();
-			
-			
-		} catch (SQLException e) {
-			output = "Error while adding to cart";
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-			
+					output += "<h1 class=\"text-center\">Successfully Added to Cart</h1><br>"
+						+ "<div class=\"btn-group\" role=\"group\">"
+						+ "<a href='../../../GB/productService/products'><button type='submit' class='btn btn-primary' >Continue Shopping</button></a>"
+						+ "<form method='post' action='../../../GB/paymentService/products/cart'>"
+						+ "<button type='submit' class='btn btn-danger' >Processed to Checkout</button></form>";
+				
+					output +="</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";
+				
+				conn.close();
+				
+				
+			} catch (SQLException e) {
+				output +="Status : Error while adding to cart";
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+				
+			}
 		}
 		
 		return output;
@@ -155,104 +155,114 @@ public class BuyProductsModel {
 	 * */
 	public String loadCartItems(String loggedUsername) {
 		
-		String output = "<script>setTimeout('location.reload(true);', 2000);</script>";
+		String output = "";
+		//output += "<script>setTimeout('location.reload(true);', 2000);</script>";
 		Connection conn = connect();
 		
 		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
 		
-		
-		//get total cost of the cart items
-		int total = 0;
-		try {
-			String sql = "SELECT SUM(productPrice) FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"'  ";
-			Statement st;
-			st = conn.createStatement();
-			ResultSet rs = st.executeQuery(sql);
-			rs.next(); 
-			total = rs.getInt(1);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		
-		//start generate random orderId
-		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 10) { 
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-        String saltStr = "GB-" + salt.toString();
-        //end generate random orderId
-		
-        
-		//buttons to "continue shopping" and "processed to payment"
-		output +="<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
-		output += "<h1 class=\"text-center\">Shopping Cart</h1><br>"
-				+ "<div class=\"btn-group\" role=\"group\">"
-				+ "<a href='../products'><button type='submit' class='btn btn-primary' >Continue Shopping</button>"
-				+ "</a><a href='../products'><button type='submit' class='btn btn-success' disabled >Total : "+total+".00 LKR </button></a>"
-		//end buttons
-		
-				
-				//start payment gateway SDK form 
-				+ "<form method='post' action='https://sandbox.payhere.lk/pay/checkout'>"
-				+ "<input type='hidden' name='merchant_id' value='1217060'>"
-				+ "<input type='hidden' name='return_url' value='http://localhost:7070/GB/paymentService/products/paymentSuccess'>"
-				+ "<input type='hidden' name='cancel_url' value='http://localhost:7070/GB/paymentService/paymentUnsuccess'>"
-				+ "<input type='hidden' name='notify_url' value=''>"
-				+ "<input type='hidden' name='order_id' value='"+saltStr+"'>"
-				+ "<input type='hidden' name='items' value='Buy products from GadgetBadget'>"
-				+ "<input type='hidden' name='currency' value='LKR'>"
-				+ "<input type='hidden' name='amount' value='"+total+"'>"
-				+ "<input type='hidden' name='country' value='Sri Lanka'>"
-				+ "<input type='hidden' name='first_name' value='Amila' >"
-				+ "<input type='hidden' name='last_name'  value='Bandara' >"
-				+ "<input type='hidden' name='email' value='testpayment@gmail.com'  >"
-				+ "<input type='hidden' name='phone' value='0777123456'  >"
-				+ "<input type='hidden' name='city' value='Colombo' >"
-				+ "<textarea  name='address'  hidden>No56, Colombo 07</textarea>"
-				+ "<button type='submit' class='btn btn-danger' >Make Payment</button>"
-				+ "</form>";
-				//end payment gateway SDK form 
-		
-		output += "</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";
-		
-		
-		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\"><div class=\"table-responsive\"><table class=\"table\">";
-		output +="<thead><th><strong>PRODUCT</strong><br></th><th><strong>PRICE</strong><br></th><th><strong>QUANTITY</strong><br></th><th><strong>REMOVE</strong><br></th><tr></thead>";
-		
-		
-		String loadCartItemsSql = "SELECT * FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"'";
-		
-		
-		try {
-			PreparedStatement stmt2;
-			stmt2 = conn.prepareStatement(loadCartItemsSql);
-			ResultSet rs2 = stmt2.executeQuery();
+		if (conn == null){
+			output += "Status : Error while connecting to the database"; 
+		}else {
 			
-			while (rs2.next()) {
-	        	
-	        	String productNameInCart = rs2.getString("productName");
-	        	String quantityInCart = rs2.getString("quantity");
-	        	String productPriceInCart = rs2.getString("productPrice");
-	        	String cartId = rs2.getString("cartId");
-	        	
-	        	
-	        	output += "<tbody><tr><td>"+productNameInCart+"</td><td>"+productPriceInCart+".00 LKR</td><td>"+quantityInCart+"</td>"
-	        			
-	        			//remove from cart
-	        			+ "<td><form action='../../../GB/paymentService/products/removeFromCart' method='post'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Remove</button></form></td></tr></tbody>";
-	        	
-	        	
+			//get total cost of the cart items
+			int total = 0;
+			try {
+				String sql = "SELECT SUM(productPrice) FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"' ";
+				Statement st;
+				st = conn.createStatement();
+				ResultSet rs = st.executeQuery(sql);
+				rs.next(); 
+				total = rs.getInt(1);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+			//start generate random orderId
+			String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+	        StringBuilder salt = new StringBuilder();
+	        Random rnd = new Random();
+	        while (salt.length() < 10) { 
+	            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+	            salt.append(SALTCHARS.charAt(index));
 	        }
+	        String saltStr = "GB-" + salt.toString();
+	        //end generate random orderId
 			
-			conn.close();
+	      
 			
-		} catch (SQLException e) {
+			String loadCartItemsSql = "SELECT * FROM cart c WHERE c.loggedUsername = '"+loggedUsername+"'";
 			
-			e.printStackTrace();
+			
+			try {
+				PreparedStatement stmt2;
+				stmt2 = conn.prepareStatement(loadCartItemsSql);
+				ResultSet rs2 = stmt2.executeQuery();
+				
+				output += "Status : Successfully fetched cart items";
+					  
+				//buttons to "continue shopping" and "processed to payment"
+				output +="<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-2\"></div><div class=\"col-md-4 col-lg-8 text-center\">";
+				output += "<h1 class=\"text-center\">Shopping Cart</h1><br>"
+						+ "<div class=\"btn-group\" role=\"group\">"
+						+ "<a href='../products'><button type='submit' class='btn btn-primary' >Continue Shopping</button>"
+						+ "</a><a href='../products'><button type='submit' class='btn btn-success' disabled >Total : "+total+".00 LKR </button></a>"
+				//end buttons
+				
+						
+						//start payment gateway SDK form 
+						+ "<form method='post' action='https://sandbox.payhere.lk/pay/checkout'>"
+						+ "<input type='hidden' name='merchant_id' value='1217060'>"
+						+ "<input type='hidden' name='return_url' value='http://localhost:7070/GB/paymentService/products/paymentSuccess'>"
+						+ "<input type='hidden' name='cancel_url' value='http://localhost:7070/GB/paymentService/paymentUnsuccess'>"
+						+ "<input type='hidden' name='notify_url' value=''>"
+						+ "<input type='hidden' name='order_id' value='"+saltStr+"'>"
+						+ "<input type='hidden' name='items' value='Buy products from GadgetBadget'>"
+						+ "<input type='hidden' name='currency' value='LKR'>"
+						+ "<input type='hidden' name='amount' value='"+total+"'>"
+						+ "<input type='hidden' name='country' value='Sri Lanka'>"
+						+ "<input type='hidden' name='first_name' value='Amila' >"
+						+ "<input type='hidden' name='last_name'  value='Bandara' >"
+						+ "<input type='hidden' name='email' value='testpayment@gmail.com'  >"
+						+ "<input type='hidden' name='phone' value='0777123456'  >"
+						+ "<input type='hidden' name='city' value='Colombo' >"
+						+ "<textarea  name='address'  hidden>No56, Colombo 07</textarea>"
+						+ "<button type='submit' class='btn btn-danger' >Make Payment</button>"
+						+ "</form>";
+						//end payment gateway SDK form 
+				
+				output += "</div><div class=\"col-md-4 col-lg-2\"></div></div></div>";
+				
+				
+				output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\"><div class=\"table-responsive\"><table class=\"table\">";
+				output +="<thead><th><strong>PRODUCT</strong><br></th><th><strong>PRICE</strong><br></th><th><strong>QUANTITY</strong><br></th><th><strong>REMOVE</strong><br></th><tr></thead>";
+			
+				while (rs2.next()) {
+		        	
+		        	String productNameInCart = rs2.getString("productName");
+		        	String quantityInCart = rs2.getString("quantity");
+		        	String productPriceInCart = rs2.getString("productPrice");
+		        	String cartId = rs2.getString("cartId");
+		        	
+		        	output += ""; 
+		        	
+		        	output += "<tbody><tr><td>"+productNameInCart+"</td><td>"+productPriceInCart+".00 LKR</td><td>"+quantityInCart+"</td>"
+		        			
+		        			//remove from cart
+		        			+ "<td><form action='../../../GB/paymentService/products/removeFromCart' method='post'><input type='hidden' name='cartId' value="+cartId+" ><button type='submit'>Remove</button></form></td></tr></tbody>";
+		        	
+		        	
+		        }
+				
+				conn.close();
+				
+			} catch (SQLException e) {
+				output += "Status : Error while fetching items";
+				e.printStackTrace();
+			}
 		}
+		
+		
 		return output;
         
 		

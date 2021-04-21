@@ -28,7 +28,7 @@ public class ViewProductService {
 	@Produces(MediaType.TEXT_HTML)
 	public String readItems(){
 		
-		return buyProductsModel.fetchAllProducts("all");
+		return buyProductsModel.fetchAllProducts();
 		
 	}
 	
@@ -63,6 +63,21 @@ public class ViewProductService {
 		
 		String output = buyProductsModel.deleteFromCart(cartId);
 		return output;
+	}
+	
+	
+	/* Removing some products from the cart will be done by this
+	 * Once clicked the remove button, the product will delete from the cart table
+	 * */
+	@DELETE
+	@Path("/removeFromCart")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.TEXT_HTML)
+	public String deleteFromCart(String cartId) throws SQLException{
+		
+		Document doc = Jsoup.parse(cartId, "", Parser.xmlParser());
+		
+		return "";
 	}
 	
 	

@@ -158,7 +158,7 @@ public class BuyProductsModel {
 	public String loadCartItems(String loggedUsername) {
 		
 		String output = "";
-		//output += "<script>setTimeout('location.reload(true);', 2000);</script>";
+		
 		Connection conn = connect();
 		
 		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
@@ -293,11 +293,15 @@ public class BuyProductsModel {
 			try {
 
 				Statement stmt = conn.createStatement();
-				stmt.executeUpdate(updateCartSql);
+				int status = stmt.executeUpdate(updateCartSql);
 				
-				output += "Status : Successfully updated the cart";
+				if(status>0) {
+					output += "Status : Successfully updated the cart";	
+				}else {
+					output += "Error while updating";
+				}
 				
-				output += "<script>window.history.back();</script>";
+				
 
 				} catch (SQLException e) {
 					output += "Error while updating";
@@ -324,11 +328,15 @@ public class BuyProductsModel {
 			try {
 
 			Statement stmt = conn.createStatement();
-			stmt.executeUpdate(deleteFromCartSql);
+			int status = stmt.executeUpdate(deleteFromCartSql);
 			
-			output += "Status : Successfully deleted from the cart";
 			
-			output += "<script>window.history.back();</script>";
+			if(status>0) {
+				output += "Status : Successfully deleted from the cart";
+			}else {
+				output += "Error while deleting";
+			}
+			
 
 			} catch (SQLException e) {
 				output += "Error while deleting";

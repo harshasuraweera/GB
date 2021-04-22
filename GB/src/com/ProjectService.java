@@ -61,6 +61,28 @@ public class ProjectService {
 		return output;
 	}
 	
+	//Display Rejected Project Details :
+	@GET
+	@Path("/ViewRejectedProjects")
+	@Produces(MediaType.TEXT_HTML)
+	public String RejectedProjects() throws SQLException{
+		
+		String output = project.RejectedProjects();
+		
+		return output;
+	}
+	
+	//Display Selected Project Details :
+	@GET
+	@Path("/ViewSelectedProjects")
+	@Produces(MediaType.TEXT_HTML)
+	public String SelectedProjects() throws SQLException{
+		
+		String output = project.SelectedProjects();
+		
+		return output;
+	}
+	
 	@PUT
 	@Path("/updateProjects")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -99,6 +121,7 @@ public class ProjectService {
 		
 		return output;
 	}
+	
 	
 	
 }

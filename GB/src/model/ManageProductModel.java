@@ -188,6 +188,8 @@ public String addProduct(String title,String sDesc,String lDesc,String price,Str
 				+ "<p>If the issue persists, &nbsp;<a href='../../../GB/productService/product_view/load'>View Added Details</a>&nbsp;in a few minutes.<br></p>";
 		
 		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+		
+		output += "Successfully added to the table";
 
 		
 		
@@ -196,13 +198,15 @@ public String addProduct(String title,String sDesc,String lDesc,String price,Str
 		
 		
 	} catch (SQLException e) {
-		// TODO Auto-generated catch block
+		
 		output += "<div class=\"container\"><div class=\"row\"><div class=\"col-md-4 col-lg-1\"></div><div class=\"col-md-4 col-lg-10 text-center\">";
 		
 		output += "<h1>Submission unsuccessful</h1><p><strong>Oops! Something went wrong! </strong><br></p>"
 				+ "<p>If the issue persists, &nbsp;<a href='../../../GB/productService/product_view'>Try Again!</a>&nbsp;in a few minutes.<br></p>";
 		
 		output += "</div><div class=\"col-md-4 col-lg-1\"></div></div></div>";
+		
+		output += "Error  while adding the items.";
 		
 		System.err.println(e.getMessage());
 		e.printStackTrace();
@@ -263,8 +267,8 @@ public String loadProducts() {
 		 "<th>Short Description </th>" +
 		 "<th>Long Description</th>" +
 		 "<th>Price</th>" +
-		 "<th>Download Link</th>" +
-		 "<th>Update</th><th>Remove</th></tr>";
+		 "<th>Download Link</th>";
+		 //"<th>Update</th><th>Remove</th></tr>";
 		 
 		 
 		 String query = "select * from products";
@@ -291,10 +295,10 @@ public String loadProducts() {
 			 output += "<td>" + downloadLink + "</td>";
 			 
 			 
-			// buttons
-			 output += "<td><input name='btnUpdate' type='button' class=\"button button2\" value='Update'class='btn btn-secondary'></td>"
-			 		+ "<td><form action='../../../GB/productService/product_view/removeProduct' method='post' ><input type='hidden' name='productId' value="+productId+" ><button class=\"button button3\"  type='submit'>Remove</button>"
-			 		+ "</form></td></tr>"; 
+//			// buttons
+//			 output += "<td><input name='btnUpdate' type='button' class=\"button button2\" value='Update'class='btn btn-secondary'></td>"
+//			 		+ "<td><form action='../../../GB/productService/product_view/removeProduct' method='post' ><input type='hidden' name='productId' value="+productId+" ><button class=\"button button3\"  type='submit'>Remove</button>"
+//			 		+ "</form></td></tr>"; 
 			 
 		 }
 		 

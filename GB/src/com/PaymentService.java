@@ -26,7 +26,7 @@ public class PaymentService {
 	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
-	public String readItems(){
+	public String fetchProducts(){
 		
 		return buyProductsModel.fetchAllProducts();
 		
@@ -50,6 +50,23 @@ public class PaymentService {
 		String output = buyProductsModel.addToCart("U001", productId, productName, shortDescription, quantity, price);
 		return output;
 	}
+	
+	
+	/* If the user clicked the checkout button, he will redirected to shopping cart through this.
+	 * In here he can remove items from cart and proceed to payment page.
+	 * Used PayHere SandBox environment to perform the payment and according to the payment status rest of the thing will happen.
+	 * */
+	@GET
+	@Path("/cart")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_HTML)
+	public String loadCart() throws SQLException{
+		
+		String output = buyProductsModel.loadCartItems("U001");
+		
+		return output;
+	}
+	
 	
 	
 	/* Update the quantity of the cart
@@ -94,20 +111,6 @@ public class PaymentService {
 	}
 	
 	
-	/* If the user clicked the checkout button, he will redirected to shopping cart through this.
-	 * In here he can remove items from cart and proceed to payment page.
-	 * Used PayHere SandBox environment to perform the payment and according to the payment status rest of the thing will happen.
-	 * */
-	@POST
-	@Path("/cart")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_HTML)
-	public String loadCart() throws SQLException{
-		
-		String output = buyProductsModel.loadCartItems("U001");
-		
-		return output;
-	}
 	
 	
 	

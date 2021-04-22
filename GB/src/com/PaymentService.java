@@ -1,5 +1,5 @@
 package com;
-import model.BuyProductsModel;
+import model.PaymentModel;
 
 import java.sql.SQLException;
 
@@ -15,9 +15,9 @@ import org.jsoup.nodes.Document;
 
 @SuppressWarnings("unused")
 @Path("/products")
-public class ViewProductService {
+public class PaymentService {
 	
-	BuyProductsModel buyProductsModel =  new BuyProductsModel();
+	PaymentModel buyProductsModel =  new PaymentModel();
 	
 	 
 	/* Working as the application HomePage.

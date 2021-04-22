@@ -142,9 +142,15 @@ public class Fund {
 
 		// buttons
 		output += "<td>"
-				+ "<form method='post' action='../../../GB/fundingService/Fund/insertComment'>"
-				+ "<input type='hidden' value='"+Project_Id+"' name= 'PVID'>"
+				+ "<form method='post' action='../../../GB/fundingService/Fund/acceptProject'>"
+				+ "<input type='hidden' value='"+randomProj_ID+"' name= 'randomProj_ID'>"
+				+ "<input type='hidden' value='"+Project_Title+"' name= 'Project_Title'>"
+				+ "<input type='hidden' value='"+Project_ShortDes+"' name= 'Project_ShortDes'>"
+				+  "<input type='hidden' value='"+Project_LongDes+"' name= 'Project_LongDes'>"
+				+  "<input type='hidden' value='"+Project_Srclink+"' name= 'Project_Srclink'>"
+				+  "<input type='hidden' value='"+Project_Videolink+"' name= 'Project_Videolink'>"
 				+ "<input type='text' name= 'acceptNote' placeholder='Note Here'>"
+				
 				+ "<input  type='submit' value='Accept'class='btn btn-secondary'>"
 				+ "</form>"
 				+ "</td>"
@@ -185,6 +191,8 @@ public class Fund {
 		
 		
 		
+		
+		
 		//Pass data to the accept table
 		public String acceptProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Projrct_Videolink, String Project_AcceptedComment)
 		{
@@ -195,23 +203,37 @@ public class Fund {
 		if (con == null)
 		{return "Error while connecting to the database for inserting."; }
 		// create a prepared statement
-		String query = " insert into acceptedprojects( Project_Id , randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Projrct_Videolink , Project_AcceptedComment) "
-				+ "select * from projects( Project_Id , randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Projrct_Videolink)"
-		+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
-		PreparedStatement preparedStmt = con.prepareStatement(query);
+		String query1 = " insert into acceptedprojects (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Projrct_Videolink )"
+				+ "values (?,?,?,?,?,?)";
+				
+				
+		
+		
+		PreparedStatement preparedStmt = con.prepareStatement(query1);
 		// binding values
-		preparedStmt.setInt(1, 0);
-		preparedStmt.setString(2, randomProj_ID);
-		preparedStmt.setString(3, Project_Title);
-		preparedStmt.setString(4, Project_ShortDes);
-		preparedStmt.setString(5, Project_LongDes);
-		preparedStmt.setString(6, Project_Srclink);
-		preparedStmt.setString(7, Projrct_Videolink);
-		preparedStmt.setString(8, Project_AcceptedComment);
+				preparedStmt.setString(1, randomProj_ID);
+				preparedStmt.setString(2, Project_Title);
+				preparedStmt.setString(3, Project_ShortDes);
+				preparedStmt.setString(4, Project_LongDes);
+				preparedStmt.setString(5, Project_Srclink);
+				preparedStmt.setString(6, Projrct_Videolink);
 		// execute the statement
 
-		preparedStmt.execute();
-		con.close();
+		preparedStmt.executeUpdate();
+		
+		
+		//insert comment
+		String sql ="UPDATE acceptedprojects SET Project_AcceptedComment='"+Project_AcceptedComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(sql);
+		//end insert comment
+		
+		//delete from project main table
+		String delete = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
+		Statement stmt2 = con.createStatement();
+		stmt2.executeUpdate(delete);
+		
+		
 		output = "Inserted successfully";
 		}
 		catch (Exception e)

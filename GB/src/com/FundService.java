@@ -49,7 +49,11 @@ public class FundService {
 		
 		String output = FundObj.ProjectView(Project_Id);
 		return output;
-	}    
+	}   
+	
+	
+	
+	
 	
 	
 	//add to accepted project table
@@ -58,16 +62,21 @@ public class FundService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String acceptProject(
-	@FormParam("PVID") String PVID,
-	@FormParam("comment") String PComment)
+	@FormParam("randomProj_ID") String randomProj_ID,
+	@FormParam("Project_Title") String Project_Title,
+	@FormParam("Project_ShortDes") String Project_ShortDes,
+	@FormParam("Project_LongDes") String Project_LongDes,
+	@FormParam("Project_Srclink") String Project_Srclink,
+	@FormParam("Project_Videolink") String Projrct_Videolink,
+	@FormParam("acceptNote") String Project_AcceptedComment)
 	{
-	String output = FundObj.insertComment(PVID, PComment);
+	String output = FundObj.acceptProject(randomProj_ID, Project_Title, Project_ShortDes, Project_LongDes, Project_Srclink, Projrct_Videolink, Project_AcceptedComment);
 	return output;
 	}
 	
 	
 	//add to rejected project table
-	@POST
+	/*	@POST
 	@Path("/rejectProject")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -77,11 +86,11 @@ public class FundService {
 	{
 	String output = FundObj.insertComment(PVID, PComment);
 	return output;
-	}
+	}*/
 	
 	
 	//add to favourite project table
-	@POST
+	/*@POST
 	@Path("/favouriteProject")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -91,21 +100,9 @@ public class FundService {
 	{
 	String output = FundObj.insertComment(PVID, PComment);
 	return output;
-	}
+	}*/
 	
-	@POST
-	@Path("/insertComment")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String insertComment(
-	@FormParam("PVID") String PVID,
-	@FormParam("comment") String PComment)
-	{
-	String output = FundObj.insertComment(PVID, PComment);
-	return output;
-	}
-	
-	
+
 	
 	@PUT
 	@Path("/updateItem")
@@ -153,5 +150,29 @@ public class FundService {
 	String output = FundObj.deleteProject(PVID);
 	return output;
 	}
+	
+	
+	
+	
+	//dont create UIs
+	
+	
+	//1) delete project from project table
+		/*method - delete
+		 * delete from projects where randomprojectId = ''asf
+		 * */
+	
+	
+	//2) update
+	/*	method 
+	 * update favouriteproject SET Project_FavouriteComment = "new comment" where randomProj_ID='aasf'
+	 * 
+	 * */
+	
+	
+	
+	
+	
+	
 
 }

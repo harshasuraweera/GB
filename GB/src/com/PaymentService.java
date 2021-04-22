@@ -53,8 +53,8 @@ public class PaymentService {
 	
 	
 	/* If the user clicked the checkout button, he will redirected to shopping cart through this.
-	 * In here he can remove items from cart and proceed to payment page.
-	 * Used PayHere SandBox environment to perform the payment and according to the payment status rest of the thing will happen.
+	  In here he can remove items from cart and proceed to payment page.
+	  Used PayHere SandBox environment to perform the payment and according to the payment status rest of the thing will happen.
 	 * */
 	@GET
 	@Path("/cart")

@@ -1,5 +1,7 @@
 package com;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.Consumes;
 
 import javax.ws.rs.DELETE;
@@ -28,7 +30,7 @@ public class FundService {
 
 	Fund FundObj = new Fund();
 
-	
+	//Display all projects from database
 	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
@@ -36,21 +38,70 @@ public class FundService {
 	{
 	return FundObj.readItems();
 	}
-
 	
-	
+	//Display single view of  projects from database
 	@POST
-	@Path("/insertItem")
+	@Path("/ProjectView")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_HTML)
+	public String ProjectView(@FormParam("ProjectId") String Project_Id)
+	throws SQLException{
+		
+		String output = FundObj.ProjectView(Project_Id);
+		return output;
+	}    
+	
+	
+	//add to accepted project table
+	@POST
+	@Path("/acceptProject")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertItem(
-	@FormParam("Pname") String Pname,
-	@FormParam("Pdescription") String Pdescription,
-	@FormParam("Plink") String Plink,
-	@FormParam("PVlink") String PVlink,
-	@FormParam("PComment") String PComment)
+	public String acceptProject(
+	@FormParam("PVID") String PVID,
+	@FormParam("comment") String PComment)
 	{
-	String output = FundObj.insertItem(Pname, Pdescription, Plink, PVlink, PComment);
+	String output = FundObj.insertComment(PVID, PComment);
+	return output;
+	}
+	
+	
+	//add to rejected project table
+	@POST
+	@Path("/rejectProject")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String rejectProject(
+	@FormParam("PVID") String PVID,
+	@FormParam("comment") String PComment)
+	{
+	String output = FundObj.insertComment(PVID, PComment);
+	return output;
+	}
+	
+	
+	//add to favourite project table
+	@POST
+	@Path("/favouriteProject")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String favouriteProject(
+	@FormParam("PVID") String PVID,
+	@FormParam("comment") String PComment)
+	{
+	String output = FundObj.insertComment(PVID, PComment);
+	return output;
+	}
+	
+	@POST
+	@Path("/insertComment")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String insertComment(
+	@FormParam("PVID") String PVID,
+	@FormParam("comment") String PComment)
+	{
+	String output = FundObj.insertComment(PVID, PComment);
 	return output;
 	}
 	
@@ -66,12 +117,8 @@ public class FundService {
 	JsonObject itemObject = new JsonParser().parse(itemData).getAsJsonObject();
 	//Read the values from the JSON object
 	String PVID = itemObject.get("PVID").getAsString();
-	String Pname = itemObject.get("Pname").getAsString();
-	String Pdescription = itemObject.get("Pdescription").getAsString();
-	String Plink = itemObject.get("Plink").getAsString();
-	String PVlink = itemObject.get("PVlink").getAsString();
 	String PComment = itemObject.get("PComment").getAsString();
-	String output = FundObj.updateItem(PVID, Pname, Pdescription, Plink, PVlink, PComment);
+	String output = FundObj.updateItem(PVID, PComment);
 	return output;
 	}
 	
@@ -88,6 +135,22 @@ public class FundService {
 	//Read the value from the element <Project ID>
 	String PMID = doc.select("PMID").text();
 	String output = FundObj.deleteItem(PMID);
+	return output;
+	}
+	
+	
+	
+	@DELETE
+	@Path("/deleteProject")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteProject(String itemData)
+	{
+	//Convert the input string to an XML document
+	Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
+	//Read the value from the element <Project ID>
+	String PVID = doc.select("PVID").text();
+	String output = FundObj.deleteProject(PVID);
 	return output;
 	}
 

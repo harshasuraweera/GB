@@ -1,3 +1,4 @@
+
 package model;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -123,6 +124,7 @@ public class user {
 		
 		return output;
 
+
 		}
 	
 	public String updateuser(String userID, String userName, String userEmail, String userMobile, String userPW) {
@@ -206,3 +208,4 @@ public class user {
 }
 
 //end project//
+

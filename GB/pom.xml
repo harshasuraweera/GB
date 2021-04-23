@@ -63,7 +63,6 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.3</version>
 		</dependency>
-		
 
 
 		<dependency>
@@ -71,6 +70,7 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.11.2</version>
 		</dependency>
+
 
   </dependencies>  
   

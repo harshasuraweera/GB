@@ -15,162 +15,452 @@ public class Fund {
 		private Connection connect(){
 			
 			Connection con = null;
+			
 			try{
 				Class.forName("com.mysql.cj.jdbc.Driver"); 
 				//Provide the correct details: DBServer/DBName, username, password
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3030/paymentservice", "root", "admin");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/fundingservice", "root", "admin");
 			}catch (Exception e){
 				e.printStackTrace();
 			}
 				return con;
 		}
 		
-
-		public String insertItem(String Pname, String Pdescription, String Plink, String PVlink, String PComment)
-		{
+		
+		//Display all projects from database
+		public String readItems(){
+			
 		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for inserting."; }
-		// create a prepared statement
-		String query = " insert into project_view(`PVID`,`Pname`,`Pdescription`,`Plink`,`PVlink`,`PComment`)"
-		+ " values (?, ?, ?, ?, ?)";
-		PreparedStatement preparedStmt = con.prepareStatement(query);
-		// binding values
-		preparedStmt.setInt(1, 0);
-		preparedStmt.setString(2, Pname);
-		preparedStmt.setString(3, Pdescription);
-		preparedStmt.setString(4, Plink);
-		preparedStmt.setString(5, PVlink);
-		preparedStmt.setString(6, PComment);
-		// execute the statement
-
-		preparedStmt.execute();
-		con.close();
-		output = "Inserted successfully";
-		}
-		catch (Exception e)
-		{
-		output = "Error while inserting the item.";
-		System.err.println(e.getMessage());
-		}
-		return output;
-		}
+		
+		try{
+			
+			Connection con = connect();
+		
+			if (con == null){
+			
+			return "Error while connecting to the database for reading."; }
+		
+		String query = "SELECT * FROM projects";
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
 		
 		
-		
-		public String readItems()
-		{
-		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for reading."; }
 		// Prepare the html table to be displayed
-		output = "<table border='1'><tr><th>Project Id</th>" +
-				"<th>Project Code</th>" +
-				"<th>Project Title</th>" +
-				"<th>Add To Accepted</th><th>Reject</th></tr>";
-		String query = "SELECT * FROM project_manage";
+		output += "<table border='1'><tr><th>Project Id</th>" +
+						"<th>Project Name</th>" +
+						"<th>Project Description</th>" 
+						+"<th>View Project</th></tr>";
+		
+		// iterate through the rows in the result set
+		while (rs.next()){
+			
+			
+			String Project_Id = Integer.toString(rs.getInt("Project_Id")); 
+			String Project_Title = rs.getString("Project_Title"); 
+			String Project_ShortDes = rs.getString("Project_ShortDes"); 
+			
+			
+		output +="<div class='col-md-4' style='padding-top: 15px;padding-bottom: 15px;'>";
+				
+		 
+		// Add into the html table
+		output += "<tr><td>" + Project_Id + "</td>";
+		output += "<td>" + Project_Title + "</td>";
+		output += "<td>" + Project_ShortDes + "</td>";
+
+		// buttons
+		output += "<td><form method='post' action='../../../GB/fundingService/Fund/ProjectView'>"
+				+ "<button type='submit' class='btn btn-primary'>View Projects</button>"
+				+ "<input type= 'hidden' name ='ProjectId' value ='"+Project_Id+"'></form></td>"
+				+ "</tr>";
+		
+    	
+    	
+    	output +="</div>";}
+		
+		con.close();
+		
+		// Complete the html table
+		output += "</table>";}
+		
+		catch (Exception e){
+			
+			output = "Error while reading the items.";
+			System.err.println(e.getMessage());
+		}
+			return output;
+		}
+		
+		
+		
+		//Display single project view 
+		public String ProjectView(String Project_Id){
+			
+		String output = "";
+		
+		try{
+			
+		Connection con = connect();
+		if (con == null){
+			
+			return "Error while connecting to the database for reading."; }
+		
+		String query = "SELECT * FROM projects where Project_Id ='"+Project_Id+"'" ;
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		// iterate through the rows in the result set
-		while (rs.next())
-		{
+		
+		output += "<table border='1'><tr><th>Project Id</th>"
+						+ "<th>Project Title</th>" 
+						+ "<th>Project Short Description</th>" 
+						+ "<th>Project Long Description</th>" 
+						+ "<th>Project Source link</th>"
+						+ "<th>Project Video link</th>"
+						+ "<th>Accept</th>"
+						+ "<th>Reject</th>"
+						+ "<th>Favourite</th></tr>";
+		
+		while (rs.next()){
+			 
+			String randomProj_ID = rs.getString("randomProj_ID"); 
+			String Project_Title = rs.getString("Project_Title");
+			String Project_ShortDes = rs.getString("Project_ShortDes");
+			String Project_LongDes = rs.getString("Project_LongDes");
+			String Project_Srclink = rs.getString("Project_Srclink");
+			String Project_Videolink = rs.getString("Project_Videolink");
 			
 			
-			String PMID = Integer.toString(rs.getInt("PMID")); 
-			String PCode = rs.getString("PCode"); 
-			String title = rs.getString("title"); 
-
+		output +="<div class='col-md-4' style='padding-top: 15px;padding-bottom: 15px;'>"
+				+ "<a href='../../../GB/fundingService/Fund'><button type='submit' class='btn btn-primary' >Back To Projects</button></a>";
+		
+		// Prepare the html table to be displayed
+				
+		
 			 
 		// Add into the html table
-		output += "<tr><td>" + PMID + "</td>";
-		output += "<td>" + PCode + "</td>";
-		output += "<td>" + title + "</td>";
+		output += "<tr><td>" + randomProj_ID + "</td>";
+		output += "<td>" + Project_Title + "</td>";
+		output += "<td>" + Project_ShortDes + "</td>";
+		output += "<td>" + Project_LongDes + "</td>";
+		output += "<td>" + Project_Srclink + "</td>";
+		output += "<td>" + Project_Videolink + "</td>";
 
 		// buttons
-		output += "<td><input name='btnUpdate' type='button' value='Update'class='btn btn-secondary'></td>"
-		+ "<td><form method='post' action='"
-		+ "#'>"+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
-		+ "<input name='PMID' type='hidden' value='" + PMID
-		+ "'>" + "</form></td></tr>";
-		}
-		con.close();
-		// Complete the html table
-		output += "</table>";
-		}
-		catch (Exception e)
-		{
-		output = "Error while reading the items.";
-		System.err.println(e.getMessage());
-		}
-		return output;
-		}
+		output += "<td>"
+				+ "<form method='post' action='../../../GB/fundingService/Fund/acceptProject'>"
+				+ "<input type='hidden' value='"+randomProj_ID+"' name= 'randomProj_ID'>"
+				+ "<input type='hidden' value='"+Project_Title+"' name= 'Project_Title'>"
+				+ "<input type='hidden' value='"+Project_ShortDes+"' name= 'Project_ShortDes'>"
+				+  "<input type='hidden' value='"+Project_LongDes+"' name= 'Project_LongDes'>"
+				+  "<input type='hidden' value='"+Project_Srclink+"' name= 'Project_Srclink'>"
+				+  "<input type='hidden' value='"+Project_Videolink+"' name= 'Project_Videolink'>"
+				+ "<input type='text' name= 'acceptNote' placeholder='Note Here'>"
+				+ "<input  type='submit' value='Accept'class='btn btn-secondary'>"
+				+ "</form>"
+				+ "</td>"
+				+ "<td>"
+				
+				+ "<form  method='post' action='../../../GB/fundingService/Fund/rejectProject'>"
+				+ "<input type='hidden' value='"+randomProj_ID+"' name= 'randomProj_ID'>"
+				+ "<input type='hidden' value='"+Project_Title+"' name= 'Project_Title'>"
+				+ "<input type='hidden' value='"+Project_ShortDes+"' name= 'Project_ShortDes'>"
+				+  "<input type='hidden' value='"+Project_LongDes+"' name= 'Project_LongDes'>"
+				+  "<input type='hidden' value='"+Project_Srclink+"' name= 'Project_Srclink'>"
+				+  "<input type='hidden' value='"+Project_Videolink+"' name= 'Project_Videolink'>"
+				+ "<input type='text' name= 'rejectNote' placeholder='Reason to reject'>"
+				+ "<button type='submit'>Reject</button>"
+				+ "</form>"
+				+ "</td>"
+				
+				+ "<td>"
+
+				+ "<form  method='post' action='../../../GB/fundingService/Fund/favouriteProject'>"
+				+ "<input type='hidden' value='"+randomProj_ID+"' name= 'randomProj_ID'>"
+				+ "<input type='hidden' value='"+Project_Title+"' name= 'Project_Title'>"
+				+ "<input type='hidden' value='"+Project_ShortDes+"' name= 'Project_ShortDes'>"
+				+  "<input type='hidden' value='"+Project_LongDes+"' name= 'Project_LongDes'>"
+				+  "<input type='hidden' value='"+Project_Srclink+"' name= 'Project_Srclink'>"
+				+  "<input type='hidden' value='"+Project_Videolink+"' name= 'Project_Videolink'>"
+				+ "<input type='text' name= 'favouriteNote' placeholder='Reason to favourite'>"
+				+ "<button type='submit'>favourite</button>"
+				+ "</form>"
+			+ "</td>"
 
 		
-		public String updateItem(String PVID, String Pname, String Pdescription, String Plink, String PVlink, String PComment)
+		+ "</tr>";
 		
-		{
+	
+    	output +="</div>";}
+		
+		con.close();
+		
+		// Complete the html table
+		output += "</table>";}
+		
+		catch (Exception e){
+			
+			output = "Error while reading the items.";
+			System.err.println(e.getMessage());
+		}
+			return output;
+		}
+		
+		
+		
+		
+		//Pass data to the accept table
+		public String acceptProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Projrct_Videolink, String Project_AcceptedComment){
+			
 		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for updating."; }
+		
+		try{
+				Connection con = connect();
+				if (con == null){
+					
+				return "Error while connecting to the database for inserting."; }
+				
+				
 		// create a prepared statement
-		String query = "UPDATE project_view SET Pname=?,Pdescription=?,Plink=?,PVlink=?,PComment=? WHERE PVID=?";
+		String query1 = " insert into acceptedprojects (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Projrct_Videolink )"
+				+ "values (?,?,?,?,?,?)";
+				
+				
+		
+		
+		PreparedStatement preparedStmt = con.prepareStatement(query1);
+		// binding values
+				preparedStmt.setString(1, randomProj_ID);
+				preparedStmt.setString(2, Project_Title);
+				preparedStmt.setString(3, Project_ShortDes);
+				preparedStmt.setString(4, Project_LongDes);
+				preparedStmt.setString(5, Project_Srclink);
+				preparedStmt.setString(6, Projrct_Videolink);
+				
+		// execute the statement
+		preparedStmt.executeUpdate();
+		
+		
+		//insert comment
+		String sql ="UPDATE acceptedprojects SET Project_AcceptedComment='"+Project_AcceptedComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(sql);
+		//end insert comment
+		
+		//delete from project main table
+		String delete = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
+		Statement stmt2 = con.createStatement();
+		stmt2.executeUpdate(delete);
+		
+		
+		output = "Inserted successfully";}
+		
+		catch (Exception e){
+			
+			output = "Error while inserting the item.";
+			System.err.println(e.getMessage());
+		
+		}
+			return output;
+		}
+		
+		
+		
+		
+		
+		//Pass data to the Reject table
+		public String rejectProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Project_Videolink, String Project_RejectComment){
+			
+		String output = "";
+		
+		try{
+			
+				Connection con = connect();
+				if (con == null){
+					
+				return "Error while connecting to the database for inserting."; }
+				
+				
+		// create a prepared statement
+		String query1 = " insert into rejectedprojects (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Project_Videolink )"
+				+ "values (?,?,?,?,?,?)";
+				
+				
+		
+		
+		PreparedStatement preparedStmt = con.prepareStatement(query1);
+		// binding values
+				preparedStmt.setString(1, randomProj_ID);
+				preparedStmt.setString(2, Project_Title);
+				preparedStmt.setString(3, Project_ShortDes);
+				preparedStmt.setString(4, Project_LongDes);
+				preparedStmt.setString(5, Project_Srclink);
+				preparedStmt.setString(6, Project_Videolink);
+				
+		// execute the statement
+		preparedStmt.executeUpdate();
+		
+		
+		//insert comment
+		String sql ="UPDATE rejectedprojects SET Project_RejectComment='"+Project_RejectComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(sql);
+		//end insert comment
+		
+		//delete from project main table
+		String delete = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
+		Statement stmt2 = con.createStatement();
+		stmt2.executeUpdate(delete);
+		
+		
+		output = "Inserted successfully";}
+		
+		catch (Exception e){
+			
+				output = "Error while inserting the item.";
+				System.err.println(e.getMessage());
+		}
+				return output;
+		}
+		
+		
+		
+		
+		//Pass data to the favourite table
+		public String favouriteProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Project_Videolink, String Project_FavouriteComment){
+			
+		String output = "";
+		
+		try{
+				Connection con = connect();
+				if (con == null){
+					
+				return "Error while connecting to the database for inserting."; }
+				
+				
+		// create a prepared statement
+		String query1 = " insert into favouriteproject (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Project_Videolink )"
+				+ "values (?,?,?,?,?,?)";
+		
+		
+		PreparedStatement preparedStmt = con.prepareStatement(query1);
+		// binding values
+				preparedStmt.setString(1, randomProj_ID);
+				preparedStmt.setString(2, Project_Title);
+				preparedStmt.setString(3, Project_ShortDes);
+				preparedStmt.setString(4, Project_LongDes);
+				preparedStmt.setString(5, Project_Srclink);
+				preparedStmt.setString(6, Project_Videolink);
+		// execute the statement
+
+		preparedStmt.executeUpdate();
+		
+		
+		//insert comment
+		String sql ="UPDATE favouriteproject SET Project_FavouriteComment='"+Project_FavouriteComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(sql);
+		//end insert comment
+		
+		//delete from project main table
+		String delete = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
+		Statement stmt2 = con.createStatement();
+		stmt2.executeUpdate(delete);
+		
+		
+		output = "Inserted successfully";}
+		
+		catch (Exception e){
+			
+			output = "Error while inserting the item.";
+			System.err.println(e.getMessage());
+		
+		}
+			return output;
+		}
+		
+		
+		
+		
+		
+		//update project
+		public String updateItem(String randomProj_ID, String Project_AcceptedComment){
+			
+		String output = ""; 
+		
+		try{
+			
+				Connection con = connect();
+				if (con == null){
+					
+		return "Error while connecting to the database for updating."; }
+				
+				
+		// create a prepared statement
+		String query = "UPDATE acceptedprojects SET Project_AcceptedComment='"+Project_AcceptedComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		
 		// binding values
-		preparedStmt.setString(1, Pname);
-		preparedStmt.setString(2, Pdescription);
-		preparedStmt.setString(3, Plink);
-		preparedStmt.setString(4, PVlink);
-		preparedStmt.setString(5, PComment);
-		preparedStmt.setInt(6, Integer.parseInt(PVID));
+		preparedStmt.setString(1, Project_AcceptedComment);
+		preparedStmt.setInt(2, Integer.parseInt(randomProj_ID));
+		
+		
 		// execute the statement
 		preparedStmt.execute();
 		con.close();
-		output = "Updated successfully";
-		}
-		catch (Exception e)
-		{
-		output = "Error while updating the item.";
+		
+				output = "Updated successfully";}
+		
+		catch (Exception e){
+			
+				output = "Error while updating the item.";
 		System.err.println(e.getMessage());
+		
 		}
-		return output;
+			return output;
 		}
 		
+
 		
-		
-		public String deleteItem(String PMID)
-		{
+	
+		//delete the project 
+		public String deleteProject(String randomProj_ID){
+			
+			
 		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for deleting."; }
+		
+		try{
+			
+			Connection con = connect();
+				if (con == null){
+					return "Error while connecting to the database for deleting."; }
+				
+				
 		// create a prepared statement
-		String query = "delete from project_manage where PMID= '"+Integer.parseInt(PMID)+"' ";
+		String query = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
+		
+		
 		// binding values
-		preparedStmt.setInt(1, Integer.parseInt(PMID));
+		preparedStmt.setInt(1, Integer.parseInt(randomProj_ID));
+		
 		// execute the statement
 		preparedStmt.execute();
+		
 		con.close();
-		output = "Deleted successfully";
-		}
-		catch (Exception e)
-		{
+		
+		output = "Deleted successfully";}
+		
+		
+		catch (Exception e){
+			
 		output = "Error while deleting the item.";
+		
 		System.err.println(e.getMessage());
-		}
-		return output;
-		}
+		
+			}
+				return output;
+			}
+
 
 	}
+

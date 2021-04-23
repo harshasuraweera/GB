@@ -206,14 +206,17 @@ public class Fund {
 		
 		
 		//Pass data to the accept table
-		public String acceptProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Projrct_Videolink, String Project_AcceptedComment)
-		{
+		public String acceptProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Projrct_Videolink, String Project_AcceptedComment){
+			
 		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for inserting."; }
+		
+		try{
+				Connection con = connect();
+				if (con == null){
+					
+				return "Error while connecting to the database for inserting."; }
+				
+				
 		// create a prepared statement
 		String query1 = " insert into acceptedprojects (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Projrct_Videolink )"
 				+ "values (?,?,?,?,?,?)";
@@ -229,8 +232,8 @@ public class Fund {
 				preparedStmt.setString(4, Project_LongDes);
 				preparedStmt.setString(5, Project_Srclink);
 				preparedStmt.setString(6, Projrct_Videolink);
+				
 		// execute the statement
-
 		preparedStmt.executeUpdate();
 		
 		
@@ -246,14 +249,15 @@ public class Fund {
 		stmt2.executeUpdate(delete);
 		
 		
-		output = "Inserted successfully";
+		output = "Inserted successfully";}
+		
+		catch (Exception e){
+			
+			output = "Error while inserting the item.";
+			System.err.println(e.getMessage());
+		
 		}
-		catch (Exception e)
-		{
-		output = "Error while inserting the item.";
-		System.err.println(e.getMessage());
-		}
-		return output;
+			return output;
 		}
 		
 		
@@ -261,14 +265,18 @@ public class Fund {
 		
 		
 		//Pass data to the Reject table
-		public String rejectProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Project_Videolink, String Project_RejectComment)
-		{
+		public String rejectProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Project_Videolink, String Project_RejectComment){
+			
 		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for inserting."; }
+		
+		try{
+			
+				Connection con = connect();
+				if (con == null){
+					
+				return "Error while connecting to the database for inserting."; }
+				
+				
 		// create a prepared statement
 		String query1 = " insert into rejectedprojects (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Project_Videolink )"
 				+ "values (?,?,?,?,?,?)";
@@ -284,8 +292,8 @@ public class Fund {
 				preparedStmt.setString(4, Project_LongDes);
 				preparedStmt.setString(5, Project_Srclink);
 				preparedStmt.setString(6, Project_Videolink);
+				
 		// execute the statement
-
 		preparedStmt.executeUpdate();
 		
 		
@@ -301,14 +309,14 @@ public class Fund {
 		stmt2.executeUpdate(delete);
 		
 		
-		output = "Inserted successfully";
+		output = "Inserted successfully";}
+		
+		catch (Exception e){
+			
+				output = "Error while inserting the item.";
+				System.err.println(e.getMessage());
 		}
-		catch (Exception e)
-		{
-		output = "Error while inserting the item.";
-		System.err.println(e.getMessage());
-		}
-		return output;
+				return output;
 		}
 		
 		

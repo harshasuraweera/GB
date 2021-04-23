@@ -532,10 +532,6 @@ public class PaymentModel {
 		        	
 		        	}
 		        	
-		        	
-		       
-		        	
-		        	
 				}
 				
 				conn.close();
@@ -555,7 +551,6 @@ public class PaymentModel {
 		
 		
 	}
-	
 	
 	
 	
@@ -580,7 +575,6 @@ public class PaymentModel {
 					+ "<th>Order Date<br></th>"
 					+ "<th>Ordered Username<br></th>"
 					+ "</tr> </thead> ";
-			
 			
 			
 			try {

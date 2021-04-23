@@ -76,31 +76,41 @@ public class FundService {
 	
 	
 	//add to rejected project table
-	/*	@POST
+	@POST
 	@Path("/rejectProject")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String rejectProject(
-	@FormParam("PVID") String PVID,
-	@FormParam("comment") String PComment)
+	@FormParam("randomProj_ID") String randomProj_ID,
+	@FormParam("Project_Title") String Project_Title,
+	@FormParam("Project_ShortDes") String Project_ShortDes,
+	@FormParam("Project_LongDes") String Project_LongDes,
+	@FormParam("Project_Srclink") String Project_Srclink,
+	@FormParam("Project_Videolink") String Project_Videolink,
+	@FormParam("rejectNote") String Project_RejectComment)
 	{
-	String output = FundObj.insertComment(PVID, PComment);
+	String output = FundObj.rejectProject(randomProj_ID, Project_Title, Project_ShortDes, Project_LongDes, Project_Srclink, Project_Videolink, Project_RejectComment);
 	return output;
-	}*/
+	}
 	
 	
 	//add to favourite project table
-	/*@POST
+	@POST
 	@Path("/favouriteProject")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String favouriteProject(
-	@FormParam("PVID") String PVID,
-	@FormParam("comment") String PComment)
+	@FormParam("randomProj_ID") String randomProj_ID,
+	@FormParam("Project_Title") String Project_Title,
+	@FormParam("Project_ShortDes") String Project_ShortDes,
+	@FormParam("Project_LongDes") String Project_LongDes,
+	@FormParam("Project_Srclink") String Project_Srclink,
+	@FormParam("Project_Videolink") String Project_Videolink,
+	@FormParam("favouriteNote") String Project_FavouriteComment)
 	{
-	String output = FundObj.insertComment(PVID, PComment);
+	String output = FundObj.favouriteProject(randomProj_ID, Project_Title, Project_ShortDes, Project_LongDes, Project_Srclink, Project_Videolink, Project_FavouriteComment);
 	return output;
-	}*/
+	}
 	
 
 	
@@ -113,27 +123,14 @@ public class FundService {
 	//Convert the input string to a JSON object
 	JsonObject itemObject = new JsonParser().parse(itemData).getAsJsonObject();
 	//Read the values from the JSON object
-	String PVID = itemObject.get("PVID").getAsString();
-	String PComment = itemObject.get("PComment").getAsString();
-	String output = FundObj.updateItem(PVID, PComment);
+	String randomProj_ID = itemObject.get("randomProj_ID").getAsString();
+	
+	String acceptNote = itemObject.get("Project_AcceptedComment").getAsString();
+	String output = FundObj.updateItem(randomProj_ID, acceptNote);
 	return output;
 	}
 	
 	
-	
-	@DELETE
-	@Path("/deleteItem")
-	@Consumes(MediaType.APPLICATION_XML)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteItem(String itemData)
-	{
-	//Convert the input string to an XML document
-	Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
-	//Read the value from the element <Project ID>
-	String PMID = doc.select("PMID").text();
-	String output = FundObj.deleteItem(PMID);
-	return output;
-	}
 	
 	
 	
@@ -146,8 +143,8 @@ public class FundService {
 	//Convert the input string to an XML document
 	Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
 	//Read the value from the element <Project ID>
-	String PVID = doc.select("PVID").text();
-	String output = FundObj.deleteProject(PVID);
+	String randomProj_ID = doc.select("randomProj_ID").text();
+	String output = FundObj.deleteProject(randomProj_ID);
 	return output;
 	}
 	

@@ -15,6 +15,7 @@ public class Fund {
 		private Connection connect(){
 			
 			Connection con = null;
+			
 			try{
 				Class.forName("com.mysql.cj.jdbc.Driver"); 
 				//Provide the correct details: DBServer/DBName, username, password
@@ -150,24 +151,35 @@ public class Fund {
 				+  "<input type='hidden' value='"+Project_Srclink+"' name= 'Project_Srclink'>"
 				+  "<input type='hidden' value='"+Project_Videolink+"' name= 'Project_Videolink'>"
 				+ "<input type='text' name= 'acceptNote' placeholder='Note Here'>"
-				
 				+ "<input  type='submit' value='Accept'class='btn btn-secondary'>"
 				+ "</form>"
 				+ "</td>"
 				+ "<td>"
 				
-			+ "<form action='../../../GB/fundingService/Fund/updateItem' method='post'>"
-				+ "<input type='hidden' name=PVID' value="+Project_Id+" >"
+				+ "<form  method='post' action='../../../GB/fundingService/Fund/rejectProject'>"
+				+ "<input type='hidden' value='"+randomProj_ID+"' name= 'randomProj_ID'>"
+				+ "<input type='hidden' value='"+Project_Title+"' name= 'Project_Title'>"
+				+ "<input type='hidden' value='"+Project_ShortDes+"' name= 'Project_ShortDes'>"
+				+  "<input type='hidden' value='"+Project_LongDes+"' name= 'Project_LongDes'>"
+				+  "<input type='hidden' value='"+Project_Srclink+"' name= 'Project_Srclink'>"
+				+  "<input type='hidden' value='"+Project_Videolink+"' name= 'Project_Videolink'>"
 				+ "<input type='text' name= 'rejectNote' placeholder='Reason to reject'>"
-				+ "<button type='submit'>Reject</button></form>"
-			+ "</td>"
+				+ "<button type='submit'>Reject</button>"
+				+ "</form>"
+				+ "</td>"
 				
-			+ "<td>"
+				+ "<td>"
 
-			+ "<form action='../../../GB/fundingService/Fund/updateItem' method='post'>"
-				+ "<input type='hidden' name=PVID' value="+Project_Id+" >"
+				+ "<form  method='post' action='../../../GB/fundingService/Fund/favouriteProject'>"
+				+ "<input type='hidden' value='"+randomProj_ID+"' name= 'randomProj_ID'>"
+				+ "<input type='hidden' value='"+Project_Title+"' name= 'Project_Title'>"
+				+ "<input type='hidden' value='"+Project_ShortDes+"' name= 'Project_ShortDes'>"
+				+  "<input type='hidden' value='"+Project_LongDes+"' name= 'Project_LongDes'>"
+				+  "<input type='hidden' value='"+Project_Srclink+"' name= 'Project_Srclink'>"
+				+  "<input type='hidden' value='"+Project_Videolink+"' name= 'Project_Videolink'>"
 				+ "<input type='text' name= 'favouriteNote' placeholder='Reason to favourite'>"
-				+ "<button type='submit'>favourite</button></form>"
+				+ "<button type='submit'>favourite</button>"
+				+ "</form>"
 			+ "</td>"
 
 		
@@ -245,6 +257,117 @@ public class Fund {
 		}
 		
 		
+		
+		
+		
+		//Pass data to the accept table
+		public String rejectProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Project_Videolink, String Project_RejectComment)
+		{
+		String output = "";
+		try
+		{
+		Connection con = connect();
+		if (con == null)
+		{return "Error while connecting to the database for inserting."; }
+		// create a prepared statement
+		String query1 = " insert into rejectedprojects (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Project_Videolink )"
+				+ "values (?,?,?,?,?,?)";
+				
+				
+		
+		
+		PreparedStatement preparedStmt = con.prepareStatement(query1);
+		// binding values
+				preparedStmt.setString(1, randomProj_ID);
+				preparedStmt.setString(2, Project_Title);
+				preparedStmt.setString(3, Project_ShortDes);
+				preparedStmt.setString(4, Project_LongDes);
+				preparedStmt.setString(5, Project_Srclink);
+				preparedStmt.setString(6, Project_Videolink);
+		// execute the statement
+
+		preparedStmt.executeUpdate();
+		
+		
+		//insert comment
+		String sql ="UPDATE rejectedprojects SET Project_RejectComment='"+Project_RejectComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(sql);
+		//end insert comment
+		
+		//delete from project main table
+		String delete = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
+		Statement stmt2 = con.createStatement();
+		stmt2.executeUpdate(delete);
+		
+		
+		output = "Inserted successfully";
+		}
+		catch (Exception e)
+		{
+		output = "Error while inserting the item.";
+		System.err.println(e.getMessage());
+		}
+		return output;
+		}
+		
+		
+		
+		
+		
+		
+		
+		//Pass data to the accept table
+		public String favouriteProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Project_Videolink, String Project_FavouriteComment)
+		{
+		String output = "";
+		try
+		{
+		Connection con = connect();
+		if (con == null)
+		{return "Error while connecting to the database for inserting."; }
+		// create a prepared statement
+		String query1 = " insert into favouriteproject (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Project_Videolink )"
+				+ "values (?,?,?,?,?,?)";
+				
+				
+		
+		
+		PreparedStatement preparedStmt = con.prepareStatement(query1);
+		// binding values
+				preparedStmt.setString(1, randomProj_ID);
+				preparedStmt.setString(2, Project_Title);
+				preparedStmt.setString(3, Project_ShortDes);
+				preparedStmt.setString(4, Project_LongDes);
+				preparedStmt.setString(5, Project_Srclink);
+				preparedStmt.setString(6, Project_Videolink);
+		// execute the statement
+
+		preparedStmt.executeUpdate();
+		
+		
+		//insert comment
+		String sql ="UPDATE favouriteproject SET Project_FavouriteComment='"+Project_FavouriteComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(sql);
+		//end insert comment
+		
+		//delete from project main table
+		String delete = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
+		Statement stmt2 = con.createStatement();
+		stmt2.executeUpdate(delete);
+		
+		
+		output = "Inserted successfully";
+		}
+		catch (Exception e)
+		{
+		output = "Error while inserting the item.";
+		System.err.println(e.getMessage());
+		}
+		return output;
+		}
+		
 			
 	
 		
@@ -252,7 +375,7 @@ public class Fund {
 		
 		
 		
-		public String updateItem(String PVID, String PComment)
+		public String updateItem(String randomProj_ID, String Project_AcceptedComment)
 		
 		{
 		String output = "";
@@ -262,13 +385,14 @@ public class Fund {
 		if (con == null)
 		{return "Error while connecting to the database for updating."; }
 		// create a prepared statement
-		String query = "UPDATE project_view SET PComment=? WHERE PVID=?";
+		String query = "UPDATE acceptedprojects SET Project_AcceptedComment='"+Project_AcceptedComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		
 		// binding values
 		
-		preparedStmt.setString(5, PComment);
-		preparedStmt.setInt(6, Integer.parseInt(PVID));
+		
+		preparedStmt.setString(1, Project_AcceptedComment);
+		preparedStmt.setInt(2, Integer.parseInt(randomProj_ID));
 		// execute the statement
 		preparedStmt.execute();
 		con.close();
@@ -286,7 +410,8 @@ public class Fund {
 
 
 		
-		public String deleteItem(String PMID)
+		
+		public String deleteProject(String randomProj_ID)
 		{
 		String output = "";
 		try
@@ -295,37 +420,10 @@ public class Fund {
 		if (con == null)
 		{return "Error while connecting to the database for deleting."; }
 		// create a prepared statement
-		String query = "delete from project_manage where PMID= '"+Integer.parseInt(PMID)+"' ";
+		String query = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		// binding values
-		preparedStmt.setInt(1, Integer.parseInt(PMID));
-		// execute the statement
-		preparedStmt.execute();
-		con.close();
-		output = "Deleted successfully";
-		}
-		catch (Exception e)
-		{
-		output = "Error while deleting the item.";
-		System.err.println(e.getMessage());
-		}
-		return output;
-		}
-		
-		
-		public String deleteProject(String PVID)
-		{
-		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for deleting."; }
-		// create a prepared statement
-		String query = "delete from project_view where PVID= '"+Integer.parseInt(PVID)+"' ";
-		PreparedStatement preparedStmt = con.prepareStatement(query);
-		// binding values
-		preparedStmt.setInt(1, Integer.parseInt(PVID));
+		preparedStmt.setInt(1, Integer.parseInt(randomProj_ID));
 		// execute the statement
 		preparedStmt.execute();
 		con.close();

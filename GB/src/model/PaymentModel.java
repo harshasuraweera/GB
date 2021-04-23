@@ -1,5 +1,7 @@
 package model;
 
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
-public class BuyProductsModel {
+public class PaymentModel {
 	
 	//This method will be connect the payment service database to the project
 	private Connection connect(){
@@ -626,9 +628,4 @@ public class BuyProductsModel {
 	
 	
 	
-	
-	
-	
-	
-
 }

@@ -1,3 +1,4 @@
+
 package model;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -123,84 +124,4 @@ public class user {
 		
 		return output;
 
-		}
-	
-	public String updateuser(String userID, String userName, String userEmail, String userMobile, String userPW) {
-	
-		String output = "";
-		
-		try {
-			
-			Connection con = connect();
-			
-			if(con == null) {
-				return "Error while connecting to the database for updating.";
-			
-			}
-			
-			// create a prepared statement
-			String query = "UPDATE user Set userName=?, userEmail=?, userMobile=?, userPW=? WHERE userID=?";
-			PreparedStatement preparedsStmt = con.prepareStatement(query);
-			
-			// binding values
-			preparedsStmt.setString(1, userName);
-			preparedsStmt.setString(2, userEmail);
-			preparedsStmt.setString(3, userMobile);
-			preparedsStmt.setString(4, userPW);
-			preparedsStmt.setInt(5, Integer.parseInt(userID));
-			
-			// execute the statement
-			preparedsStmt.executeUpdate();
-			con.close();
-			output = "Updated successfully";
-			
-		}
-		catch(Exception e) {
-			
-			output = "Error while updating the user."; 
-			 System.err.println(e.getMessage()); 
-		
-		}
-		
-		return output;
-	
-	}
-	
-	public String deleteuser(String userID) {
-		
-		String output = "";
-		
-		try {
-			
-			Connection con = connect();
-			if(con == null) {
-				
-				return "Error while connecting to the database for deleting.";
-			
-			}
-			
-			// create a prepared statement
-			String query = "delete from user where userID=?";
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-			
-			// binding values
-			preparedStmt.setInt(1, Integer.parseInt(userID));
-			
-			// execute the statement
-			preparedStmt.execute();
-			con.close(); 
-			output = "Deleted successfully"; 
-			
-		}
-		catch(Exception e){
-			
-			output = "Error while deleting the users."; 
-			 System.err.println(e.getMessage()); 
-		
-		}
-		
-		return output;
-		
-	}
-		
-}
+

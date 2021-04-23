@@ -1,4 +1,3 @@
-package com;
 
 import model.user;
 
@@ -73,3 +72,4 @@ public class userService {
 		return output;
 	}
 }
+

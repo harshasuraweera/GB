@@ -1,5 +1,9 @@
 package com;
-import model.BuyProductsModel;
+
+
+
+
+
 
 import java.sql.SQLException;
 
@@ -8,6 +12,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 //For JSON
 import com.google.gson.*;
+
+import model.PaymentModel;
+
 //For XML
 import org.jsoup.*;
 import org.jsoup.parser.*;
@@ -15,9 +22,9 @@ import org.jsoup.nodes.Document;
 
 @SuppressWarnings("unused")
 @Path("/products")
-public class ViewProductService {
+public class PaymentService {
 	
-	BuyProductsModel buyProductsModel =  new BuyProductsModel();
+	PaymentModel buyProductsModel =  new PaymentModel();
 	
 	 
 	/* Working as the application HomePage.
@@ -166,6 +173,6 @@ public class ViewProductService {
 		return output;
 		
 	}
-	
+
 
 }

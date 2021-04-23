@@ -125,9 +125,6 @@ public class FundService {
 	}
 	
 
-	
-	
-	
 	//update the project
 	@PUT
 	@Path("/updateItem")

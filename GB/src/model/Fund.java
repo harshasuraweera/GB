@@ -29,12 +29,16 @@ public class Fund {
 		
 		//Display all projects from database
 		public String readItems(){
+			
 		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for reading."; }
+		
+		try{
+			
+			Connection con = connect();
+		
+			if (con == null){
+			
+			return "Error while connecting to the database for reading."; }
 		
 		String query = "SELECT * FROM projects";
 		Statement stmt = con.createStatement();
@@ -48,8 +52,7 @@ public class Fund {
 						+"<th>View Project</th></tr>";
 		
 		// iterate through the rows in the result set
-		while (rs.next())
-		{
+		while (rs.next()){
 			
 			
 			String Project_Id = Integer.toString(rs.getInt("Project_Id")); 
@@ -73,32 +76,34 @@ public class Fund {
 		
     	
     	
-    	output +="</div>";
+    	output +="</div>";}
 		
-		}
 		con.close();
+		
 		// Complete the html table
-		output += "</table>";
+		output += "</table>";}
+		
+		catch (Exception e){
+			
+			output = "Error while reading the items.";
+			System.err.println(e.getMessage());
 		}
-		catch (Exception e)
-		{
-		output = "Error while reading the items.";
-		System.err.println(e.getMessage());
-		}
-		return output;
+			return output;
 		}
 		
 		
 		
 		//Display single project view 
-		public String ProjectView(String Project_Id)
-		{
+		public String ProjectView(String Project_Id){
+			
 		String output = "";
-		try
-		{
+		
+		try{
+			
 		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for reading."; }
+		if (con == null){
+			
+			return "Error while connecting to the database for reading."; }
 		
 		String query = "SELECT * FROM projects where Project_Id ='"+Project_Id+"'" ;
 		Statement stmt = con.createStatement();
@@ -115,8 +120,7 @@ public class Fund {
 						+ "<th>Reject</th>"
 						+ "<th>Favourite</th></tr>";
 		
-		while (rs.next())
-		{
+		while (rs.next()){
 			 
 			String randomProj_ID = rs.getString("randomProj_ID"); 
 			String Project_Title = rs.getString("Project_Title");
@@ -186,21 +190,20 @@ public class Fund {
 		+ "</tr>";
 		
 	
-    	output +="</div>";
+    	output +="</div>";}
 		
-		}
 		con.close();
-		// Complete the html table
-		output += "</table>";
-		}
-		catch (Exception e)
-		{
-		output = "Error while reading the items.";
-		System.err.println(e.getMessage());
-		}
-		return output;
-		}
 		
+		// Complete the html table
+		output += "</table>";}
+		
+		catch (Exception e){
+			
+			output = "Error while reading the items.";
+			System.err.println(e.getMessage());
+		}
+			return output;
+		}
 		
 		
 		
@@ -337,8 +340,6 @@ public class Fund {
 		// create a prepared statement
 		String query1 = " insert into favouriteproject (randomProj_ID , Project_Title , Project_ShortDes , Project_LongDes , Project_Srclink , Project_Videolink )"
 				+ "values (?,?,?,?,?,?)";
-				
-				
 		
 		
 		PreparedStatement preparedStmt = con.prepareStatement(query1);
@@ -377,8 +378,6 @@ public class Fund {
 			return output;
 		}
 		
-			
-	
 		
 		
 		
@@ -421,8 +420,7 @@ public class Fund {
 		}
 		
 
-
-
+		
 		
 		//delete the project 
 		public String deleteProject(String randomProj_ID){

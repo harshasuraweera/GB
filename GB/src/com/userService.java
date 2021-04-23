@@ -56,7 +56,7 @@ public class userService {
 		String output = userObj.updateuser(userID, userName1, userEmail, userMobile, userPW);
 		return output;
 		
-	}
+	}///
 	
 	@DELETE
 	@Path("/")

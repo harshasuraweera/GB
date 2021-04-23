@@ -23,7 +23,7 @@ public class user {
 			e.printStackTrace();
 			
 		}
-		return con;
+		return con;///
 	}
 	
 	public String insertuser(String userName, String userEmail, String userMobile, String userPW) {

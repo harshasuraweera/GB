@@ -260,7 +260,7 @@ public class Fund {
 		
 		
 		
-		//Pass data to the accept table
+		//Pass data to the Reject table
 		public String rejectProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Project_Videolink, String Project_RejectComment)
 		{
 		String output = "";
@@ -314,10 +314,7 @@ public class Fund {
 		
 		
 		
-		
-		
-		
-		//Pass data to the accept table
+		//Pass data to the favourite table
 		public String favouriteProject(String randomProj_ID, String Project_Title, String Project_ShortDes, String Project_LongDes, String Project_Srclink, String Project_Videolink, String Project_FavouriteComment)
 		{
 		String output = "";
@@ -374,7 +371,7 @@ public class Fund {
 		
 		
 		
-		
+		//update project
 		public String updateItem(String randomProj_ID, String Project_AcceptedComment)
 		
 		{
@@ -410,7 +407,7 @@ public class Fund {
 
 
 		
-		
+		//delete the project 
 		public String deleteProject(String randomProj_ID)
 		{
 		String output = "";

@@ -113,7 +113,7 @@ public class FundService {
 	}
 	
 
-	
+	//update the project
 	@PUT
 	@Path("/updateItem")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -133,7 +133,7 @@ public class FundService {
 	
 	
 	
-	
+	// delete project 
 	@DELETE
 	@Path("/deleteProject")
 	@Consumes(MediaType.APPLICATION_XML)
@@ -148,28 +148,7 @@ public class FundService {
 	return output;
 	}
 	
-	
-	
-	
-	//dont create UIs
-	
-	
-	//1) delete project from project table
-		/*method - delete
-		 * delete from projects where randomprojectId = ''asf
-		 * */
-	
-	
-	//2) update
-	/*	method 
-	 * update favouriteproject SET Project_FavouriteComment = "new comment" where randomProj_ID='aasf'
-	 * 
-	 * */
-	
-	
-	
-	
-	
+
 	
 
 }

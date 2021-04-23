@@ -366,9 +366,7 @@ public class SubmitProjectsModel {
 			if (con == null)
 			 {return "Error while connecting to the database for reading."; }
 			
-			//<button onclick="window.location.href='/page2'">Continue</button>
 			
-			// Prepare the html table to be displayed
 			output = "<style>"
 					+ "\r\n" + 
 					"table {\r\n" + 
@@ -462,9 +460,7 @@ public class SubmitProjectsModel {
 			if (con == null)
 			 {return "Error while connecting to the database for reading."; }
 			
-			//<button onclick="window.location.href='/page2'">Continue</button>
 			
-			// Prepare the html table to be displayed
 			output = "<style>"
 					+ "\r\n" + 
 					"table {\r\n" + 

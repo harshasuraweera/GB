@@ -14,7 +14,8 @@ import org.jsoup.*;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
-
+  /* Working as the project service HomePage.
+  * */
 @Path("/projects")
 public class ProjectService {
 	
@@ -28,7 +29,10 @@ public class ProjectService {
 	    
 	  }
 	
-	//Add New Projects :
+	
+	/* Once clicked the "Submit" button this will be called. 
+	 * Then all the entered details will be added to the project table.
+	 * */
 	@POST
 	@Path("/AddProject")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -41,16 +45,16 @@ public class ProjectService {
 			@FormParam("Project_Srclink") String Project_Srclink,
 			@FormParam("Project_Videolink") String Project_Videolink) throws SQLException{
 	
-		
-		
-		//String output = product.addProduct(productId,title,sDesc,lDesc,price,downloadLink);
-		
 		String output = project.AddProjects(Project_Title,Project_ShortDes ,Project_LongDes ,Project_Srclink ,Project_Videolink );
 		return output;
 	}
 	
 	
-	//Display All Project Details :
+	
+	
+	/* Display all rejected project details
+	 * Once clicked the view rejected projects button, all the rejected projects will be display
+	 * */
 	@GET
 	@Path("/readProjects")
 	@Produces(MediaType.TEXT_HTML)
@@ -61,11 +65,44 @@ public class ProjectService {
 		return output;
 	}
 	
+	
+	
+	/* Display all rejected project details
+	 * Once clicked the view rejected projects button, all the rejected projects will be display
+	 * */
+	@GET
+	@Path("/ViewRejectedProjects")
+	@Produces(MediaType.TEXT_HTML)
+	public String RejectedProjects() throws SQLException{
+		
+		String output = project.RejectedProjects();
+		
+		return output;
+	}
+	
+	
+	/* Display all selected project details
+	 * Once clicked the view selected projects button, all the rejected projects will be display
+	 * */
+	@GET
+	@Path("/ViewSelectedProjects")
+	@Produces(MediaType.TEXT_HTML)
+	public String SelectedProjects() throws SQLException{
+		
+		String output = project.SelectedProjects();
+		
+		return output;
+	}
+	
+	
+	/* Update submitted project details
+	 * Once clicked the update button, the project details will be updated at the projects table
+	 * */
 	@PUT
 	@Path("/updateProjects")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updateCart(String projectData)
+	public String updateProject(String projectData)
 	{
 		//Convert the input string to a JSON object
 		JsonObject projectObject = new JsonParser().parse(projectData).getAsJsonObject();
@@ -83,11 +120,15 @@ public class ProjectService {
 		return output;
 	}
 	
+	
+	/* Removing submitted project details
+	 * Once clicked the delete button, the project will delete from the projects table
+	 * */
 	@DELETE
 	@Path("/deleteprojects")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_HTML)
-	public String deleteFromCart(String projectData) throws SQLException{
+	public String deleteProject(String projectData) throws SQLException{
 		
 		//Convert the input string to an XML document
 		Document doc = Jsoup.parse(projectData, "", Parser.xmlParser());
@@ -99,6 +140,7 @@ public class ProjectService {
 		
 		return output;
 	}
+	
 	
 	
 }

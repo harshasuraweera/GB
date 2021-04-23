@@ -18,7 +18,7 @@ public class SubmitProjectsModel {
 		Connection conn = null;
 		try{
 			Class.forName("com.mysql.cj.jdbc.Driver"); 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/projectservice", "root", "hashini");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3030/projectservice", "root", "1234");
 		}catch (Exception e){
 			e.printStackTrace();
 		}

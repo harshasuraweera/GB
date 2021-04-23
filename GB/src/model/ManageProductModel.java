@@ -13,12 +13,12 @@ import java.util.Random;
 public class ManageProductModel {
 	
 //DB connection	
-private Connection connect(){
+public static Connection connect(){
 		
 		Connection conn = null;
 		try{
 			Class.forName("com.mysql.cj.jdbc.Driver"); 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/productservise", "root", "Highschool23*");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3030/productservise", "root", "1234");
 		}catch (Exception e){
 			e.printStackTrace();
 			

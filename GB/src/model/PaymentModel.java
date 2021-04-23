@@ -33,7 +33,7 @@ public class PaymentModel {
 	public String fetchAllProducts(){
 		
 		String output = "";
-		Connection conn = connect();
+		Connection conn = ManageProductModel.connect();
 		output += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
 		
 		
@@ -44,7 +44,7 @@ public class PaymentModel {
 			
 			try {
 				
-				String sql = "SELECT * FROM testproducts";
+				String sql = "SELECT * FROM products";
 				
 				Statement stmt;
 				stmt = conn.createStatement();
@@ -63,7 +63,7 @@ public class PaymentModel {
 				while (rs.next())
 				{
 					String productId = rs.getString("productId");
-		        	String productName = rs.getString("name");
+		        	String productName = rs.getString("title");
 		        	String shortDescription = rs.getString("sDesc");
 		        	String totalSales = rs.getString("sales");
 		        	String productPrice = rs.getString("price");
@@ -517,11 +517,11 @@ public class PaymentModel {
 				{
 					String paidProductId = rs.getString("paidProductId");
 		        	
-		        	
+		        	Connection productConn = ManageProductModel.connect();
 		        	//get Product details from product table
-					String getProductDetailsSql = "SELECT * FROM testproducts tp WHERE tp.productId = '"+paidProductId+"' ";
+					String getProductDetailsSql = "SELECT * FROM products tp WHERE tp.productId = '"+paidProductId+"' ";
 					Statement stmt2;
-					stmt2 = conn.createStatement();
+					stmt2 = productConn.createStatement();
 					ResultSet rs2 = stmt2.executeQuery(getProductDetailsSql);
 					
 		        	while(rs2.next()) {

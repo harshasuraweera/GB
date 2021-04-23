@@ -22,10 +22,16 @@ import com.google.gson.*;
 	import org.jsoup.*;
 	import org.jsoup.parser.*;
 	import org.jsoup.nodes.Document;
+	
+	
 
 @Path("/Fund")
 
+
+
 public class FundService {
+	
+	
 	
 
 	Fund FundObj = new Fund();
@@ -38,6 +44,8 @@ public class FundService {
 	{
 	return FundObj.readItems();
 	}
+	
+	
 	
 	//Display single view of  projects from database
 	@POST
@@ -52,9 +60,7 @@ public class FundService {
 	}   
 	
 	
-	
-	
-	
+
 	
 	//add to accepted project table
 	@POST
@@ -73,6 +79,9 @@ public class FundService {
 	String output = FundObj.acceptProject(randomProj_ID, Project_Title, Project_ShortDes, Project_LongDes, Project_Srclink, Projrct_Videolink, Project_AcceptedComment);
 	return output;
 	}
+	
+	
+	
 	
 	
 	//add to rejected project table
@@ -94,6 +103,9 @@ public class FundService {
 	}
 	
 	
+	
+	
+	
 	//add to favourite project table
 	@POST
 	@Path("/favouriteProject")
@@ -113,6 +125,9 @@ public class FundService {
 	}
 	
 
+	
+	
+	
 	//update the project
 	@PUT
 	@Path("/updateItem")
@@ -130,8 +145,7 @@ public class FundService {
 	return output;
 	}
 	
-	
-	
+
 	
 	// delete project 
 	@DELETE

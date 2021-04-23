@@ -372,35 +372,40 @@ public class Fund {
 		
 		
 		//update project
-		public String updateItem(String randomProj_ID, String Project_AcceptedComment)
+		public String updateItem(String randomProj_ID, String Project_AcceptedComment){
+			
+		String output = ""; 
 		
-		{
-		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for updating."; }
+		try{
+			
+				Connection con = connect();
+				if (con == null){
+					
+		return "Error while connecting to the database for updating."; }
+				
+				
 		// create a prepared statement
 		String query = "UPDATE acceptedprojects SET Project_AcceptedComment='"+Project_AcceptedComment+"' WHERE randomProj_ID='"+randomProj_ID+"'";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		
 		// binding values
-		
-		
 		preparedStmt.setString(1, Project_AcceptedComment);
 		preparedStmt.setInt(2, Integer.parseInt(randomProj_ID));
+		
+		
 		// execute the statement
 		preparedStmt.execute();
 		con.close();
-		output = "Updated successfully";
-		}
-		catch (Exception e)
-		{
-		output = "Error while updating the item.";
+		
+				output = "Updated successfully";}
+		
+		catch (Exception e){
+			
+				output = "Error while updating the item.";
 		System.err.println(e.getMessage());
+		
 		}
-		return output;
+			return output;
 		}
 		
 
@@ -408,31 +413,44 @@ public class Fund {
 
 		
 		//delete the project 
-		public String deleteProject(String randomProj_ID)
-		{
+		public String deleteProject(String randomProj_ID){
+			
+			
 		String output = "";
-		try
-		{
-		Connection con = connect();
-		if (con == null)
-		{return "Error while connecting to the database for deleting."; }
+		
+		try{
+			
+			Connection con = connect();
+				if (con == null){
+					return "Error while connecting to the database for deleting."; }
+				
+				
 		// create a prepared statement
 		String query = "DELETE from projects WHERE randomProj_ID = '"+randomProj_ID+"'";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
+		
+		
 		// binding values
 		preparedStmt.setInt(1, Integer.parseInt(randomProj_ID));
+		
 		// execute the statement
 		preparedStmt.execute();
+		
 		con.close();
-		output = "Deleted successfully";
-		}
-		catch (Exception e)
-		{
+		
+		output = "Deleted successfully";}
+		
+		
+		catch (Exception e){
+			
 		output = "Error while deleting the item.";
+		
 		System.err.println(e.getMessage());
-		}
-		return output;
-		}
+		
+			}
+				return output;
+			}
 
 
 	}
+

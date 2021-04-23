@@ -23,5 +23,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="F:/Eclipse 2020-06 workspace/jsoup-1.13.1.jar"/>
+	<classpathentry kind="lib" path="F:/Eclipse 2020-06 workspace/mysql-connector-java-8.0.23.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

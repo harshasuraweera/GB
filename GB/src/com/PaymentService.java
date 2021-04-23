@@ -1,5 +1,10 @@
 package com;
 
+
+
+
+
+
 import java.sql.SQLException;
 
 //For REST Service
@@ -8,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 //For JSON
 import com.google.gson.*;
 
-import model.BuyProductsModel;
+import model.PaymentModel;
 
 //For XML
 import org.jsoup.*;
@@ -17,9 +22,9 @@ import org.jsoup.nodes.Document;
 
 @SuppressWarnings("unused")
 @Path("/products")
-public class ViewProductService {
+public class PaymentService {
 	
-	BuyProductsModel buyProductsModel =  new BuyProductsModel();
+	PaymentModel buyProductsModel =  new PaymentModel();
 	
 	 
 	/* Working as the application HomePage.

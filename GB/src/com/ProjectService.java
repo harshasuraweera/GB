@@ -1,5 +1,6 @@
 package com;
 
+
 import model.SubmitProjectsModel;
 
 import java.sql.SQLException;
@@ -141,6 +142,5 @@ public class ProjectService {
 		return output;
 	}
 	
-	
-	
+
 }

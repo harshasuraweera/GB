@@ -19,6 +19,8 @@ import org.jsoup.nodes.Document;
 public class ProductService {
 	
 	ManageProductModel product = new ManageProductModel();
+	
+	//Products Details will be fetched
 	@GET
 	  @Path("/")
 	  @Produces(MediaType.TEXT_HTML)
@@ -28,6 +30,9 @@ public class ProductService {
 	    
 	  }
 	
+	
+	//Button "Add Products" will be called this.
+	//User can add new products using this.
 	@POST
 	@Path("/AddProduct")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -43,6 +48,7 @@ public class ProductService {
 		return output;
 	}
 	
+	//All the submitted products will be displayed using a table
 	@GET
 	@Path("/load")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -54,6 +60,7 @@ public class ProductService {
 		return output;
 	}
 	
+	//Delete relevant product
 	@DELETE
 	@Path("/removeProduct")
 	@Consumes(MediaType.APPLICATION_XML)
@@ -71,6 +78,7 @@ public class ProductService {
 				return output;
 	}
 	
+	//Update relevant product
 	@PUT
 	@Path("/updateDetails")
 	@Consumes(MediaType.APPLICATION_JSON) 

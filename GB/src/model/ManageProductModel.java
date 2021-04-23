@@ -12,6 +12,7 @@ import java.util.Random;
 
 public class ManageProductModel {
 	
+//DB connection	
 private Connection connect(){
 		
 		Connection conn = null;
@@ -20,12 +21,12 @@ private Connection connect(){
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/productservise", "root", "Highschool23*");
 		}catch (Exception e){
 			e.printStackTrace();
-			System.out.println(e);
+			
 		}
 			return conn;
 	}
 
-
+//generate random product ID
 public static String generateProductId() {
     String SALTCHARS = "ABCDE1234567890";
     StringBuilder salt = new StringBuilder();
@@ -44,10 +45,6 @@ public static String generateProductId() {
 public String addProductInterface() throws SQLException {
 
 String output = "";
-
-//randId
-
-
 
 String productId = generateProductId() ;
 
@@ -134,29 +131,23 @@ String productId = generateProductId() ;
 			+"\"<center><h3> - Add New Product -</h3></center><hr class=\"new4\"><br><div class=\"container\"><form action='../../../GB/productService/product_view/AddProduct' method='post'>"
 			
 			+ "<div class=\"row\"><div class=\"col-25\"><label>Product ID :</label></div><div class=\"col-75\"><input type='text' name='productId' value="+productId+" readonly></div></div><br><br>"
-			+ "<div class=\"row\"><div class=\"col-25\"><label>Product Title :</label></div><div class=\"col-75\"><input type='text' name='title' required></div></div><br><br>"
+			+ "<div class=\"row\"><div class=\"col-25\"><label>Product Title :</label></div><div class=\"col-75\"><input type='text' name='title'  required></div></div><br><br>"
 			+ "<div class=\"row\"><div class=\"col-25\"><label>Short Description :</label></div><div class=\"col-75\"><textarea class=\"form-control\" name=\"sDesc\" style=\"height: 50px;\" style=\"width: 50px;\" maxlength=\"200\" placeholder=\"Should be less than 50 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea></div></div><br><br>"
 			+ "<div class=\"row\"><div class=\"col-25\"><label>Long Description  :</label></div><div class=\"col-75\"><textarea class=\"form-control\" name=\"lDesc\" style=\"height: 100px;\" maxlength=\"500\" placeholder=\"Should be less than 100 letters\" onkeypress=\"return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)\" required></textarea></div></div><br><br>"
 			+ "<div class=\"row\"><div class=\"col-25\"><label>Price:</label></div><div class=\"col-75\"><input type='number'  style=\"height: 50px;\" style=\"width: 100px;\" placeholder=\"USD\"  name='price' required ></div></div><br><br>"
 			+ "<div class=\"row\"><div class=\"col-25\"><label>Download Link :</label></div><div class=\"col-75\"><input type='file' name='downloadLink' required></div></div><br><br>"
 			+ "<input class=\"btn btn-primary\" style=\"margin:5px;\" type=\"submit\" value='Add Products'>"
-			
+			+ "<button class=\"btn btn-primary\" onclick=\"window.location.href='../../../GB/productService/product_view/load'\"> View All Projects</button>"
 			+ "</form>"
-			+ "<form action='../../../GB/productService/product_view/load' method='get'>\"<input class=\"btn btn-primary\" type=\"submit\" value='View Details'>"
-			+"</form>"
 			+ "</center>";
 	
 	
-	
-	
-
-
 return output;
 
 }
 
 
-//insert products to  db
+//insert products to  database
 public String addProduct(String title,String sDesc,String lDesc,String price,String downloadLink) {
 	
 	String output = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
@@ -193,7 +184,7 @@ public String addProduct(String title,String sDesc,String lDesc,String price,Str
 
 		
 		
-		//conn.close();
+		
 		
 		
 		
@@ -268,7 +259,7 @@ public String loadProducts() {
 		 "<th>Long Description</th>" +
 		 "<th>Price</th>" +
 		 "<th>Download Link</th>";
-		 //"<th>Update</th><th>Remove</th></tr>";
+		
 		 
 		 
 		 String query = "select * from products";
@@ -295,11 +286,7 @@ public String loadProducts() {
 			 output += "<td>" + downloadLink + "</td>";
 			 
 			 
-//			// buttons
-//			 output += "<td><input name='btnUpdate' type='button' class=\"button button2\" value='Update'class='btn btn-secondary'></td>"
-//			 		+ "<td><form action='../../../GB/productService/product_view/removeProduct' method='post' ><input type='hidden' name='productId' value="+productId+" ><button class=\"button button3\"  type='submit'>Remove</button>"
-//			 		+ "</form></td></tr>"; 
-			 
+
 		 }
 		 
 		 
@@ -347,7 +334,7 @@ public String loadProducts() {
 			}
 
 		} catch (SQLException e) {
-			output += "Error while removing";
+		
 			e.printStackTrace();
 		}
 		}
@@ -356,7 +343,7 @@ public String loadProducts() {
 	}
 	
 	
-	//update the cart quantity
+	//update submitted products
 		public String updateProduct( String productId,String title,String sDesc,String lDesc,String price,String downloadLink) {
 			String output = "";
 			Connection conn = connect();

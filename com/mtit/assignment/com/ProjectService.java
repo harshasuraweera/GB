@@ -1,4 +1,4 @@
-package com;
+package com.mtit.assignment.com;
 
 
 import model.SubmitProjectsModel;

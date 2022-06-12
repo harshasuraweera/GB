@@ -1,4 +1,4 @@
-package model;
+package com.mtit.assignment.model;
 
 
 import java.sql.Connection;
